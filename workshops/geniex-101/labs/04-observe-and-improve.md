@@ -31,3 +31,7 @@ Discuss:
 - Choose `llama_cpp` or `qairt` for a model scenario.
 - Point to load, template, generate, stream, profile, and release in code.
 - Name one limitation of the prototype.
+
+## Finish
+
+Return to [`../START-HERE.md`](../START-HERE.md) if you need the repository map, or show your completed application to the facilitator.

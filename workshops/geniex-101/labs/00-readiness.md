@@ -3,6 +3,8 @@
 **Time:** 25 minutes
 **Goal:** Prove that the environment is ready and explain where inference runs.
 
+**You are in the correct first lab.** If you have not completed pre-work, return to [`../START-HERE.md`](../START-HERE.md) and follow the setup link before continuing.
+
 ## Check the environment
 
 From the repository root:
@@ -38,3 +40,7 @@ You are ready when you can explain this path without looking at the diagram:
 ```text
 local notes → Python app → GenieX SDK → llama.cpp → Hexagon NPU → tokens/profile
 ```
+
+## Next lab
+
+Continue to [`01-cli-first-inference.md`](01-cli-first-inference.md).

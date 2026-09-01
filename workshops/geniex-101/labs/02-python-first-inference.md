@@ -32,3 +32,7 @@ In `starter/inference.py`, change `max_new_tokens` from 256 to 100. Predict whic
 ## Checkpoint
 
 Explain why `apply_chat_template()` is different from joining strings manually, and why the model is loaded inside a context manager.
+
+## Next lab
+
+Continue to [`03-local-briefing-assistant.md`](03-local-briefing-assistant.md).

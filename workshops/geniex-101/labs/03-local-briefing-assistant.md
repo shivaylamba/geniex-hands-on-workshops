@@ -56,3 +56,7 @@ The completed solution performs a deterministic structural check on the generate
 1. **Concept:** keep system rules separate from source data and wrap the notes in explicit delimiters.
 2. **API:** the GenieX-specific path does not need to change when adding a new application mode.
 3. **Code:** compare your function signatures with `solution/prompts.py` and `solution/app.py` before reading their bodies.
+
+## Next lab
+
+Continue to [`04-observe-and-improve.md`](04-observe-and-improve.md).

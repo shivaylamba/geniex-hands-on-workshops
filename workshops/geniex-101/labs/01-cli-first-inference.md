@@ -37,3 +37,7 @@ Your choices should be `llama_cpp` for the first and `qairt` for the second. Exp
 ## Checkpoint
 
 Point to the model identifier, precision, compute unit, prompt, and output in your command and result.
+
+## Next lab
+
+Continue to [`02-python-first-inference.md`](02-python-first-inference.md).

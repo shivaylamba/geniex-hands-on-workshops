@@ -2,6 +2,8 @@
 
 In this 2.5-hour workshop you will run a language model locally on the Snapdragon NPU, use the real GenieX Python SDK, and build a Local Briefing Assistant that turns a text file into a concise briefing or action table.
 
+> **Taking the workshop? Begin with [`START-HERE.md`](START-HERE.md).** It identifies the first file to open, separates pre-work from timed workshop work, and links every lab in order.
+
 ## What you will produce
 
 By the end, your application will:
@@ -39,11 +41,13 @@ Do not begin with a model download during the event. Pair with a known-good mach
 
 ## Labs
 
-1. [Readiness and architecture](labs/00-readiness.md)
-2. [First local inference from the CLI](labs/01-cli-first-inference.md)
-3. [First inference from Python](labs/02-python-first-inference.md)
-4. [Build the Local Briefing Assistant](labs/03-local-briefing-assistant.md)
-5. [Observe and improve](labs/04-observe-and-improve.md)
+Follow the sequence from [`START-HERE.md`](START-HERE.md). The first timed workshop file is [`labs/00-readiness.md`](labs/00-readiness.md).
+
+1. [Lab 0 — Readiness and architecture](labs/00-readiness.md)
+2. [Lab 1 — First local inference from the CLI](labs/01-cli-first-inference.md)
+3. [Lab 2 — First inference from Python](labs/02-python-first-inference.md)
+4. [Lab 3 — Build the Local Briefing Assistant](labs/03-local-briefing-assistant.md)
+5. [Lab 4 — Observe and improve](labs/04-observe-and-improve.md)
 
 ## Run the completed solution
 
