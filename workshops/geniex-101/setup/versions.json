@@ -1,0 +1,35 @@
+{
+  "workshop_release": "0.1.0",
+  "verified_on": "2026-09-01",
+  "python": {
+    "version": "3.12.8",
+    "architecture": "ARM64"
+  },
+  "geniex": {
+    "python_package": "0.5.0",
+    "sdk": "v0.5.0",
+    "cli": "v0.5.0",
+    "qairt": "v2.45.0.260326"
+  },
+  "model": {
+    "id": "unsloth/Qwen3.5-2B-GGUF",
+    "repository_revision": "f6d5376be1edb4d416d56da11e5397a961aca8ae",
+    "precision": "Q4_0",
+    "weights_file": "Qwen3.5-2B-Q4_0.gguf",
+    "weights_bytes": 1214873856,
+    "weights_sha256": "cd70221bebaee0503e0f6717e174250cd7825aa88438b3aabec9ad55731d9bb1",
+    "cached_projector_file": "mmproj-F32.gguf",
+    "cached_projector_bytes": 1325684416,
+    "cached_projector_sha256": "d23b0e7bd6fe4416151838434f6a33a1d5f116a82b35565a11579e37dc80ad78",
+    "model_type": "llm",
+    "runtime": "llama_cpp",
+    "compute": "npu"
+  },
+  "verification_device": {
+    "manufacturer": "Dell Inc.",
+    "model": "Latitude 7455",
+    "chipset": "Snapdragon X Elite X1E80100",
+    "memory_gib": 31.6,
+    "operating_system": "Windows 11 Enterprise ARM64 build 26200"
+  }
+}

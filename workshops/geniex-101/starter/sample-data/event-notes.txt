@@ -1,0 +1,9 @@
+Snapdragon Multiverse developer event planning notes
+
+The event will introduce developers to on-device generative AI using GenieX on Snapdragon laptops. The workshop room opens at 9:00 AM on 18 September 2026. The hands-on session starts at 10:00 AM and should finish by 12:30 PM.
+
+Maya owns the participant repository and must freeze the workshop tag by 10 September. Arjun will validate the environment on all 30 laptops by 14 September. Priya will prepare the facilitator slides and a two-minute backup recording by 12 September. Printed signage is required, but no owner or deadline has been assigned.
+
+Every laptop needs native ARM64 Python, GenieX 0.5.0, the pinned Q4_0 model, at least 5 GB of free disk space, and the workshop repository. Model files should be downloaded before attendees arrive. The room network is shared with another event, so the workshop must still run after setup if internet access is unreliable.
+
+Open questions: Can five spare laptops be reserved? Who will staff the environment-help desk? Is model-cache redistribution permitted by the selected model license?
