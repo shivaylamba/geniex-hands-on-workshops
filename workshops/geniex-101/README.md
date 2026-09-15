@@ -1,5 +1,7 @@
 # GenieX 101: Build Your First Local AI Application on Snapdragon
 
+> **Supplemental legacy workshop.** The current two-hour event starts at [Start Here](../../START-HERE.md) and includes hands-on 201 and 301 segments. The duration and navigation below describe the older standalone course only.
+
 In this 2.5-hour workshop you will run a language model locally on the Snapdragon NPU, use the real GenieX Python SDK, and build a Local Briefing Assistant that turns a text file into a concise briefing or action table.
 
 > **Taking the workshop? Begin with [`START-HERE.md`](START-HERE.md).** It identifies the first file to open, separates pre-work from timed workshop work, and links every lab in order.

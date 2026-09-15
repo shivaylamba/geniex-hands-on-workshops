@@ -1,5 +1,7 @@
 # GenieX 101 run of show
 
+> Historical standalone schedule. For the current two-hour 101/201/301 event use the [new instructor guide](../../geniex-bootcamp/INSTRUCTOR-GUIDE.md).
+
 | Clock | Duration | Instructor action | Participant action | Recovery gate |
 |---:|---:|---|---|---|
 | 00:00 | 5 min | Welcome, promise, local-inference prediction | Vote and discuss | Start from backup demo if display machine fails |

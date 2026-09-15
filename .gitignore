@@ -5,3 +5,4 @@ __pycache__/
 *.log
 workshops/geniex-101/output/
 workshops/geniex-101/.workshop-cache/
+workshops/geniex-bootcamp/output/

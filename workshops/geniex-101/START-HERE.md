@@ -1,6 +1,6 @@
 # Start here — GenieX 101
 
-This is the canonical starting page for participants.
+> **Current event:** use the repository [Start Here](../../START-HERE.md) for the two-hour 101 → 201 → 301 workshop. This page preserves the older standalone 101 sequence as supplemental material; it is not the current participant entry point.
 
 ## Which file do I open first?
 

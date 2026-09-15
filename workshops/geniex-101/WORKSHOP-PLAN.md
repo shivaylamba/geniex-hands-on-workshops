@@ -1,5 +1,7 @@
 # GenieX 101: Build Your First Local AI Application on Snapdragon
 
+> **Historical standalone plan.** The current [120-minute structure](../geniex-bootcamp/WORKSHOP-PLAN.md) supersedes this event schedule and its proposed 201 direction. Retained for background; use the new detailed 101/201/301 labs for delivery.
+
 **Status:** Curriculum draft for technical review
 **Recommended duration:** 2 hours 30 minutes
 **Compressed event format:** 2 hours; omit the optional experiment in Module 5 and use a facilitator-led setup

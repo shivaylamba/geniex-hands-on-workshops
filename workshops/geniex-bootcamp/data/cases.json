@@ -1,0 +1,7 @@
+[
+  {"id":"room","question":"What is the workshop room?","expected_source":"current-room","expected_terms":["Maple"],"forbidden_terms":["Cedar"]},
+  {"id":"owner","question":"Who will validate the laptops?","expected_source":"laptops","expected_terms":["Arjun"],"forbidden_terms":[]},
+  {"id":"unknown","question":"Who is the keynote speaker?","expected_source":"none","expected_terms":["unknown"],"forbidden_terms":[]},
+  {"id":"signage","question":"Who is the signage owner?","expected_source":"signage","expected_terms":["unknown"],"forbidden_terms":["Maya","Priya"]},
+  {"id":"offline","question":"Can the workshop run without internet after setup?","expected_source":"network","expected_terms":["without internet"],"forbidden_terms":[]}
+]
