@@ -1,0 +1,55 @@
+{
+  "question": "What is the workshop room?",
+  "selected": [
+    {
+      "id": "current-room",
+      "status": "current",
+      "text": "The workshop room is Maple. Doors open at 09:00."
+    },
+    {
+      "id": "network",
+      "status": "current",
+      "text": "Models must be cached before the event. The workshop must run without internet after setup."
+    }
+  ]
+}
+{
+  "question": "Who will validate the laptops?",
+  "selected": [
+    {
+      "id": "laptops",
+      "status": "current",
+      "text": "Arjun will validate all 30 laptops by 14 September."
+    }
+  ]
+}
+{
+  "question": "Who is the keynote speaker?",
+  "selected": []
+}
+{
+  "question": "Who is the signage owner?",
+  "selected": [
+    {
+      "id": "signage",
+      "status": "current",
+      "text": "Printed signage is required. The signage owner is unknown."
+    }
+  ]
+}
+{
+  "question": "Can the workshop run without internet after setup?",
+  "selected": [
+    {
+      "id": "network",
+      "status": "current",
+      "text": "Models must be cached before the event. The workshop must run without internet after setup."
+    },
+    {
+      "id": "current-room",
+      "status": "current",
+      "text": "The workshop room is Maple. Doors open at 09:00."
+    }
+  ]
+}
+

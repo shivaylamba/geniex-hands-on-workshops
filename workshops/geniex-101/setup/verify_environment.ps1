@@ -43,7 +43,7 @@ if (-not $GenieXCliPath) {
     }
 }
 
-Write-Host "GenieX 101 environment verification" -ForegroundColor Cyan
+Write-Host "GenieX workshop environment verification" -ForegroundColor Cyan
 Write-Host "Workshop: $workshopDir"
 
 $computer = Get-CimInstance Win32_ComputerSystem
@@ -83,9 +83,15 @@ if (-not $GenieXCliPath -or -not (Test-Path -LiteralPath $GenieXCliPath)) {
     Add-Check "GenieX CLI" $false "geniex.exe was not found"
 } else {
     try {
-        $cliVersion = (& $GenieXCliPath version | Select-Object -First 1)
-        $chipset = (& $GenieXCliPath config get chipset | Select-Object -First 1)
-        Add-Check "GenieX CLI" ($LASTEXITCODE -eq 0) "$cliVersion; chipset: $chipset; path: $GenieXCliPath"
+        # Consume complete native-command output before selecting display lines.
+        # Early pipeline termination can leave an unreliable native exit status.
+        $versionOutput = @(& $GenieXCliPath version)
+        $versionExit = $LASTEXITCODE
+        $chipsetOutput = @(& $GenieXCliPath config get chipset)
+        $chipsetExit = $LASTEXITCODE
+        $cliVersion = $versionOutput | Select-Object -First 1
+        $chipset = $chipsetOutput | Select-Object -First 1
+        Add-Check "GenieX CLI" ($versionExit -eq 0 -and $chipsetExit -eq 0) "$cliVersion; chipset: $chipset; version exit: $versionExit; config exit: $chipsetExit; path: $GenieXCliPath"
     } catch {
         Add-Check "GenieX CLI" $false $_.Exception.Message
     }

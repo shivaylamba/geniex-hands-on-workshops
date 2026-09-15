@@ -1,2 +1,5 @@
 * text=auto eol=lf
 *.ps1 text eol=crlf
+# Preserve whitespace in captured terminal output and its generated bundle.
+verification/**/*.txt -whitespace
+AI_AGENT_BUNDLE.md -whitespace

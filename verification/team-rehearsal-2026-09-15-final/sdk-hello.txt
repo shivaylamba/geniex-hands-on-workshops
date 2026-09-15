@@ -1,0 +1,5 @@
+Load: 2483.6 ms; requested compute: npu
+On-device AI refers to artificial intelligence running locally on a user's device, such as a smartphone or smartwatch, rather than relying on remote servers. This approach offers several key benefits, including faster response times, enhanced privacy by processing personal data locally, and reduced latency for real-time applications like instant messaging and autonomous driving.
+TTFT: 154.4 ms (GenieX 0.5.0 units)
+Generated tokens: 64; stop: eos
+

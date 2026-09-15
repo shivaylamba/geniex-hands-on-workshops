@@ -1,0 +1,92 @@
+FFFFFFFFFFFFF.F.                                                         [100%]
+================================== FAILURES ===================================
+____________________ test_retrieval_prefers_current_source ____________________
+workshops\geniex-bootcamp\tests\test_challenges.py:20: in test_retrieval_prefers_current_source
+    assert selected and selected[0]["id"] == "current-room"
+E   AssertionError: assert ([{'id': 'archive-room', 'status': 'archived', 'text': 'The workshop room is Cedar. This announcement is superseded.'}] and 'archive-room' == 'current-room'
+E     
+E     - current-room
+E     + archive-room)
+_________________________ test_retrieval_obeys_budget _________________________
+workshops\geniex-bootcamp\tests\test_challenges.py:27: in test_retrieval_obeys_budget
+    assert [doc["id"] for doc in selected] == ["short"]
+E   AssertionError: assert ['long'] == ['short']
+E     
+E     At index 0 diff: 'long' != 'short'
+E     Use -v to get more diff
+_________________________ test_retrieval_can_abstain __________________________
+workshops\geniex-bootcamp\tests\test_challenges.py:32: in test_retrieval_can_abstain
+    assert component("retrieval").select_context("keynote speaker", docs) == []
+E   AssertionError: assert [{'id': 'x', ...en at nine.'}] == []
+E     
+E     Left contains one more item: {'id': 'x', 'status': 'current', 'text': 'Doors open at nine.'}
+E     Use -v to get more diff
+___________________ test_retrieval_generalizes_to_new_names ___________________
+workshops\geniex-bootcamp\tests\test_challenges.py:38: in test_retrieval_generalizes_to_new_names
+    assert selected[0]["id"] == "first"
+E   AssertionError: assert 'second' == 'first'
+E     
+E     - first
+E     + second
+____________________ test_retrieval_rejects_invalid_budget ____________________
+workshops\geniex-bootcamp\tests\test_challenges.py:42: in test_retrieval_rejects_invalid_budget
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+______________________ test_retrieval_breaks_ties_by_id _______________________
+workshops\geniex-bootcamp\tests\test_challenges.py:49: in test_retrieval_breaks_ties_by_id
+    assert [doc["id"] for doc in component("retrieval").select_context("room", docs)] == ["a", "z"]
+E   AssertionError: assert ['z'] == ['a', 'z']
+E     
+E     At index 0 diff: 'z' != 'a'
+E     Right contains one more item: 'z'
+E     Use -v to get more diff
+_________________ test_policy_rejects_bad_evidence[payload0] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_________________ test_policy_rejects_bad_evidence[payload1] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_________________ test_policy_rejects_bad_evidence[payload2] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_________________ test_policy_rejects_bad_evidence[payload3] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_________________ test_policy_rejects_bad_evidence[payload4] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_________________ test_policy_rejects_bad_evidence[payload5] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_________________ test_policy_rejects_bad_evidence[payload6] __________________
+workshops\geniex-bootcamp\tests\test_challenges.py:62: in test_policy_rejects_bad_evidence
+    assert component("policy").validate_answer(json.dumps(payload), SOURCE)[0] is False
+E   assert True is False
+_____________________ test_policy_rejects_archived_source _____________________
+workshops\geniex-bootcamp\tests\test_challenges.py:72: in test_policy_rejects_archived_source
+    assert component("policy").validate_answer(raw, docs)[0] is False
+E   assert True is False
+=========================== short test summary info ===========================
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_retrieval_prefers_current_source
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_retrieval_obeys_budget
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_retrieval_can_abstain
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_retrieval_generalizes_to_new_names
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_retrieval_rejects_invalid_budget
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_retrieval_breaks_ties_by_id
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload0]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload1]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload2]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload3]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload4]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload5]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_bad_evidence[payload6]
+FAILED workshops/geniex-bootcamp/tests/test_challenges.py::test_policy_rejects_archived_source
+14 failed, 2 passed in 0.06s
+

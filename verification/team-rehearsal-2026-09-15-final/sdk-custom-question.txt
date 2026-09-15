@@ -1,0 +1,5 @@
+Load: 2364.1 ms; requested compute: npu
+On-device AI instantly analyzes the attendee's biometric data to personalize their experience in real time, eliminating the need for a centralized server.
+TTFT: 167.1 ms (GenieX 0.5.0 units)
+Generated tokens: 27; stop: eos
+

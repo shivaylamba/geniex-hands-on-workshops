@@ -1,0 +1,2 @@
+# Reproduce the dependency versions used by the team rehearsal.
+-r requirements-lock.txt

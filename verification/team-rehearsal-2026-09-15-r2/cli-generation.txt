@@ -1,0 +1,8 @@
+🌍loading model...
+> Explain on-device AI in two sentences.
+🌍encoding...
+On-device AI moves machine learning models from cloud servers directly to a user's device, ensuring that data stays private and responses are instant without relying on the internet. This approach allows for seamless, low-latency processing tasks like image recognition and voice recognition, even in environments with poor connectivity or strict privacy regulations.
+
+— 19.4 tok/s • 61 tok • 0.2 s first token —
+
+

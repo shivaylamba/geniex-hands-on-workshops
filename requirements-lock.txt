@@ -1,0 +1,10 @@
+# Windows ARM64 team rehearsal, 2026-09-15; Python 3.12.8.
+# The interpreter, device drivers and GenieX runtime cache are separate prerequisites.
+geniex==0.5.0
+pytest==9.1.1
+tqdm==4.70.1
+colorama==0.4.6
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+pygments==2.21.0

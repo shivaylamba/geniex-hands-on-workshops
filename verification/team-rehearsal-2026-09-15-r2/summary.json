@@ -1,0 +1,176 @@
+{
+  "started_utc": "2026-09-15T14:02:26.920072+00:00",
+  "python": "3.12.8",
+  "architecture": "ARM64",
+  "geniex": "0.5.0",
+  "packages": {
+    "geniex": "0.5.0",
+    "pytest": "9.1.1",
+    "tqdm": "4.70.1",
+    "colorama": "0.4.6",
+    "iniconfig": "2.3.0",
+    "packaging": "26.3",
+    "pluggy": "1.6.0",
+    "pygments": "2.21.0"
+  },
+  "base_commit": "8570eb9c0930195f0a2775a5bb94620afa2f0992",
+  "source_sha256": {
+    "requirements.txt": "5d0c1738551f81dbb7c9aae84f0deb641ccb961a9f78d425a60c23daa8dd60f8",
+    "scripts/rehearse_workshop.py": "2664e3bd1eb08f13f77115a485d09ba4d358f36df75bfbfe6ca4db0f1b3ee442",
+    "workshops/geniex-101/setup/verify_environment.ps1": "5119e4b85253484fb156928cc888adb8a820847b54f3aacfc1e7e9c99f6654c7",
+    "workshops/geniex-bootcamp/app.py": "c7f2f2d3d90697b9b24865eda2c46090de8dbaa7db4d08a11652c0bf6d5b42ea",
+    "workshops/geniex-bootcamp/data/cases.json": "45d4144ae5dda8111ce098997dba73abf9511c52b03177cd23bdd7f79d903a99",
+    "workshops/geniex-bootcamp/data/documents.json": "93e0dd741bd17342841f494d33da5628127f6fa3fc2204e9972ed2c79c79e570",
+    "workshops/geniex-bootcamp/solution/policy.py": "0cd2c87027cbb01e315c1dd4cf560e49b1776f7f08568b1aad8d85e4026a34bd",
+    "workshops/geniex-bootcamp/solution/retrieval.py": "db01cfe94897c6ed8dcf939f6c1d932d2a71a5f212d642cb6ebc98c34dde12b0",
+    "workshops/geniex-bootcamp/starter/policy.py": "a39f1e2e24c2602923286c206c0c0f5a4c9419e85a74534705303b8240798c49",
+    "workshops/geniex-bootcamp/starter/retrieval.py": "879f2ce2e2d2ea1e8692d0ac786e194e37634de3e83254b93abc57b9eeb49f51",
+    "workshops/geniex-bootcamp/tests/test_challenges.py": "26fc52ad1e30b4b18c4faba9077b967f327db418a1a3dc243684f9b5c679b391",
+    "workshops/geniex-bootcamp/tests/test_runner.py": "2aab605399de2091016cffd6c58c91b3f682545ab82b43b5bac3baec51e8897e"
+  },
+  "steps": [
+    {
+      "step": "dependency-check",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 0.29
+    },
+    {
+      "step": "environment",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 1.99
+    },
+    {
+      "step": "cli-help",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 0.04
+    },
+    {
+      "step": "cli-generation",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 5.44
+    },
+    {
+      "step": "reference-tests",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 0.32
+    },
+    {
+      "step": "intentional-starter-failures",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "passed": true,
+      "elapsed_seconds": 0.31
+    },
+    {
+      "step": "inspect-starter",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 0.06
+    },
+    {
+      "step": "inspect-solution",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 0.07
+    },
+    {
+      "step": "baseline",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 11.4
+    },
+    {
+      "step": "completed",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 15.54
+    },
+    {
+      "step": "short",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 18.6
+    },
+    {
+      "step": "long",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 29.65
+    },
+    {
+      "step": "overwrite-protection",
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "passed": true,
+      "elapsed_seconds": 0.07
+    },
+    {
+      "step": "invalid-budget",
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "passed": true,
+      "elapsed_seconds": 0.06
+    }
+  ],
+  "experiments": {
+    "baseline": {
+      "generations": 5,
+      "policy_pass": 5,
+      "fixture_pass": 0,
+      "joint_pass": 0,
+      "truncated": 0,
+      "generation_wall_ms_mean": 1614.82,
+      "ttft_ms_min": 366.672,
+      "ttft_ms_max": 373.333
+    },
+    "completed": {
+      "generations": 5,
+      "policy_pass": 4,
+      "fixture_pass": 3,
+      "joint_pass": 3,
+      "truncated": 0,
+      "generation_wall_ms_mean": 2471.34,
+      "ttft_ms_min": 302.779,
+      "ttft_ms_max": 447.363
+    },
+    "short": {
+      "generations": 10,
+      "policy_pass": 1,
+      "fixture_pass": 1,
+      "joint_pass": 1,
+      "truncated": 9,
+      "generation_wall_ms_mean": 1557.99,
+      "ttft_ms_min": 302.65,
+      "ttft_ms_max": 447.001
+    },
+    "long": {
+      "generations": 10,
+      "policy_pass": 8,
+      "fixture_pass": 7,
+      "joint_pass": 7,
+      "truncated": 0,
+      "generation_wall_ms_mean": 2668.23,
+      "ttft_ms_min": 301.577,
+      "ttft_ms_max": 448.847
+    }
+  },
+  "scope": "Prepared-machine execution; not an installer or disconnected-network test",
+  "workflow_passed": true,
+  "finished_utc": "2026-09-15T14:03:50.876240+00:00"
+}

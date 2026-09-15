@@ -1,5 +1,7 @@
 # GenieX: 101 → 201 → 301
 
+> **Self-guided team edition:** start with [the internal walkthrough](../../INTERNAL-WALKTHROUGH.md) and the numbered top-level workshop folders. The implementation and detailed challenge resources below are shared by that edition.
+
 A two-hour, code-first workshop. **[Participants start here](../../START-HERE.md).**
 
 Build one progressively more reliable local assistant using the same small cached model throughout. 101 introduces inference; 201 adds source selection; 301 adds validation, adversarial tests, and evaluation. The level numbers describe progression within this event, not separate two-hour courses.

@@ -1,5 +1,7 @@
 # Start here: build a local assistant in two hours
 
+> **Self-guided team edition:** begin with [INTERNAL-WALKTHROUGH.md](INTERNAL-WALKTHROUGH.md), then use the numbered [101](101-local-inference/README.md), [201](201-evidence-assistant/README.md), and [301](301-reliability-lab/README.md) entry pages. The underlying challenge sequence below remains available for additional hints.
+
 This is the participant entry point for the **GenieX 101 → 201 → 301 workshop**. You will build a local event-information assistant, break it with conflicting documents, and decide whether its answers are reliable enough to show a user.
 
 ## Before the event (not part of the two hours)
@@ -9,8 +11,8 @@ You need basic Python (functions, lists, dictionaries, exceptions), Git, and a s
 Clone this repository and keep every terminal at its root:
 
 ```powershell
-git clone https://github.com/shivaylamba/geniex-workshop.git
-cd geniex-workshop
+git clone https://github.com/shivaylamba/geniex-hands-on-workshops.git
+cd geniex-hands-on-workshops
 ```
 
 Complete the existing [installation and model-cache instructions](workshops/geniex-101/setup/README.md). They are shared by this workshop. Install the pinned dependencies there, including pytest. The text model is approximately 1.13 GiB, but GenieX currently caches an additional projector: allow at least 2.4 GiB for the model cache plus software and working space. Downloads happen **before class**.

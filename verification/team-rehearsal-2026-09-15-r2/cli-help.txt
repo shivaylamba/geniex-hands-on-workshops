@@ -1,0 +1,34 @@
+Usage:
+  geniex [flags] [command]
+
+Model Commands
+  pull        Pull model from HuggingFace, Qualcomm AI Hub Models, or Docker Hub
+  remove      Remove cached model
+  clean       remove all cached models
+  list        List all cached models
+  model       Manage cached models
+
+Inference Commands
+  infer       Infer with a model
+  serve       Run the GenieX Server
+  run         Infer a model with server
+
+Management Commands
+  config      Manage GenieX CLI configuration
+  version     show geniex version
+  update      update geniex
+
+Additional Commands:
+  help        Help about any command
+  completion  Generate the autocompletion script for the specified shell
+
+Flags:
+      --data-dir string   Custom data directory (env: GENIEX_DATADIR)
+  -h, --help              help for geniex
+      --log string        Log level: none, error, warn, info, debug, trace (env: GENIEX_LOG) (default "none")
+      --skip-update       Skip checking for updates
+      --verbose           Enable verbose output
+  -v, --version           Print version information
+
+Use "geniex [command] --help" for more information about a command.
+

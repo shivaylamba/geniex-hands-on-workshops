@@ -1,0 +1,8 @@
+🌍loading model...
+> Explain on-device AI in two sentences.
+🌍encoding...
+On-device AI leverages machine learning models running directly on a user's mobile hardware to process data and generate responses locally, rather than sending information to a remote server. This approach enhances privacy by keeping sensitive information secure on the device and reduces latency, making applications feel faster and more responsive.
+
+— 19.7 tok/s • 57 tok • 0.1 s first token —
+
+

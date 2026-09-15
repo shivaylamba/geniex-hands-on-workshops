@@ -1,5 +1,7 @@
 # GenieX 101 setup
 
+> **Team edition:** use [INTERNAL-WALKTHROUGH.md](../../../INTERNAL-WALKTHROUGH.md) for the current step-by-step installation and locked dependencies. This older setup page is retained as background; its helper is shared by the new workshops.
+
 Complete this before the timed workshop. Model download is intentionally excluded from class time.
 
 ## 1. Confirm the target machine

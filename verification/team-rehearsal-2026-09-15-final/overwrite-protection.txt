@@ -1,0 +1,7 @@
+
+usage: app.py [-h] [--track {starter,solution}] [--policy {starter,solution}]
+              [--question QUESTION] [--inspect] [--evaluate]
+              [--repeats {1,2,3,4,5}] [--context-chars CONTEXT_CHARS]
+              [--max-tokens MAX_TOKENS] [--model MODEL]
+              [--device {npu,cpu,gpu,hybrid}] [--output OUTPUT]
+app.py: error: Output exists; choose a new experiment filename

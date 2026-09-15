@@ -1,0 +1,51 @@
+{
+  "question": "What is the workshop room?",
+  "selected": [
+    {
+      "id": "archive-room",
+      "status": "archived",
+      "text": "The workshop room is Cedar. This announcement is superseded."
+    }
+  ]
+}
+{
+  "question": "Who will validate the laptops?",
+  "selected": [
+    {
+      "id": "archive-room",
+      "status": "archived",
+      "text": "The workshop room is Cedar. This announcement is superseded."
+    }
+  ]
+}
+{
+  "question": "Who is the keynote speaker?",
+  "selected": [
+    {
+      "id": "archive-room",
+      "status": "archived",
+      "text": "The workshop room is Cedar. This announcement is superseded."
+    }
+  ]
+}
+{
+  "question": "Who is the signage owner?",
+  "selected": [
+    {
+      "id": "archive-room",
+      "status": "archived",
+      "text": "The workshop room is Cedar. This announcement is superseded."
+    }
+  ]
+}
+{
+  "question": "Can the workshop run without internet after setup?",
+  "selected": [
+    {
+      "id": "archive-room",
+      "status": "archived",
+      "text": "The workshop room is Cedar. This announcement is superseded."
+    }
+  ]
+}
+

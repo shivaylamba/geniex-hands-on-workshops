@@ -1,0 +1,10 @@
+GenieX 101 environment verification
+Workshop: <REPO>\workshops\geniex-101
+[PASS] Snapdragon ARM64 device - Dell Inc. Latitude 7455; Snapdragon(R) X Elite - X1E80100 - Qualcomm(R) Oryon(TM) CPU
+[PASS] Native Python - Python 3.12.8 ARM64 at <REPO>\.venv-team\Scripts\python.exe
+[PASS] GenieX Python SDK - v0.5.0; runtimes: llama_cpp,qairt; Hexagon detected: True
+[FAIL] GenieX CLI - GenieX CLI Version:     v0.5.0; chipset: Snapdragon X Elite CRD; path: <USER>\AppData\Local\GenieX CLI\geniex.EXE
+[PASS] Pinned model cache - unsloth/Qwen3.5-2B-GGUF is cached
+
+1 check(s) failed. Follow setup/README.md before the workshop.
+
