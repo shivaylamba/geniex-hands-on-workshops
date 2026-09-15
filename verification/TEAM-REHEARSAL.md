@@ -1,5 +1,7 @@
 # Team edition: actual laptop rehearsal
 
+> A later user-requested [double-check](DOUBLE-CHECK-2026-09-15.md) reran all 16 steps successfully with 33 additional real generations.
+
 Date: 15 September 2026. This report is the evidence behind [the internal walkthrough](../INTERNAL-WALKTHROUGH.md), not a claim that every model answer was correct.
 
 ## Scope
