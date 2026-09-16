@@ -1,43 +1,31 @@
-# Start here: build a local assistant in two hours
+# Start here: your local workday copilot
 
-> **Self-guided team edition:** begin with [INTERNAL-WALKTHROUGH.md](INTERNAL-WALKTHROUGH.md), then use the numbered [101](101-local-inference/README.md), [201](201-evidence-assistant/README.md), and [301](301-reliability-lab/README.md) entry pages. The underlying challenge sequence below remains available for additional hints.
+You will build an assistant that turns project notes and an available time budget into a proposed plan and a draft teammate update. All supplied data is fictional. Nothing is sent.
 
-This is the participant entry point for the **GenieX 101 → 201 → 301 workshop**. You will build a local event-information assistant, break it with conflicting documents, and decide whether its answers are reliable enough to show a user.
+## Before you start
 
-## Before the event (not part of the two hours)
+You need basic Python functions, lists, dictionaries, exceptions, and a prepared supported Snapdragon Windows ARM64 device. No training, fine-tuning, cloud account, or Arduino board is required for this application. A partner's prepared laptop is fine.
 
-You need basic Python (functions, lists, dictionaries, exceptions), Git, and a supported Snapdragon Windows ARM64 device. No model-training or machine-learning experience is required. This release was tested on Snapdragon X Elite; other platforms need their own validation. Pair with a prepared device if yours is unsupported.
+Complete [the setup and readiness gates](INTERNAL-WALKTHROUGH.md#setup-before-class). That page includes the exact branch to clone, installation sources, model cache details, environment commands, and the first device run. Do not start the workshop timer while downloading.
 
-Clone this repository and keep every terminal at its root:
+Keep three things open: this repository's root PowerShell, your editor, and [your worksheet](workshops/workday-copilot/WORKSHEET.md). All commands assume the repository root.
 
-```powershell
-git clone https://github.com/shivaylamba/geniex-hands-on-workshops.git
-cd geniex-hands-on-workshops
-```
+## Open these files in this order
 
-Complete the existing [installation and model-cache instructions](workshops/geniex-101/setup/README.md). They are shared by this workshop. Install the pinned dependencies there, including pytest. The text model is approximately 1.13 GiB, but GenieX currently caches an additional projector: allow at least 2.4 GiB for the model cache plus software and working space. Downloads happen **before class**.
+1. **[101-local-inference/README.md](101-local-inference/README.md)** — start here after setup. Understand GenieX and generate a useful summary.
+2. **[201-evidence-assistant/README.md](201-evidence-assistant/README.md)** — implement `check_plan` in [starter.py](workshops/workday-copilot/starter.py), then run the copilot using your code.
+3. Take a five-minute break and swap pair roles.
+4. **[301-reliability-lab/README.md](301-reliability-lab/README.md)** — challenge the tool boundary, compare budgets, and assess the untrusted draft.
+5. Use the final section of your worksheet for a 60-second demo.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\workshops\geniex-101\setup\verify_environment.ps1
-.\.venv\Scripts\python.exe -m pytest -q
-```
+## How to know you are done
 
-Tests use the reference implementations by default. Passing them does not complete your learner exercises. If you have not run GenieX before, also complete setup step 6 before arrival. The model download and first successful device run are a readiness gate.
+You can identify the GenieX call, show your own tested function, explain an actual tool observation, and demonstrate one failure or limitation. Merely running the supplied solution is a presenter rehearsal, not completion of the learner work.
 
-## At the event: open the first lab
+Bare pytest uses the reference implementation. The 201 lab explicitly sets `COPILOT_TRACK=starter` so you test your edits.
 
-**Start with [101 — First inference and a broken assistant](workshops/geniex-bootcamp/labs/101-first-inference.md).** Do not start in the solution folder.
+## If you get stuck
 
-| Clock | Segment | Participant file | What you produce |
-|---|---|---|---|
-| 00:00–00:25 | 101: run and explain | [101 lab](workshops/geniex-bootcamp/labs/101-first-inference.md) | A prediction, local output, and a failure diagnosis |
-| 00:25–01:05 | 201: build context selection | [201 lab](workshops/geniex-bootcamp/labs/201-build-context.md) | Your retrieval implementation and a new test |
-| 01:05–01:10 | Break | — | Swap keyboard driver |
-| 01:10–01:50 | 301: validate and evaluate | [301 lab](workshops/geniex-bootcamp/labs/301-evaluate-reliability.md) | Your evidence validator and measured experiment |
-| 01:50–02:00 | Demos and decisions | [worksheet](workshops/geniex-bootcamp/WORKSHEET.md#final-demo) | A justified ship / do-not-ship decision |
+Write your prediction first, use the staged lab hints, then ask a partner. Open the reference solution only after trying. Without supported hardware, complete the Python tests and trace-reading exercises; label that **code-only**, not local inference.
 
-Keep the [worksheet](workshops/geniex-bootcamp/WORKSHEET.md) open alongside the lab. Make a local copy or write answers in your notes. Work in pairs: the driver edits; the navigator predicts outputs and challenges assumptions. Switch at each segment.
-
-You edit `workshops/geniex-bootcamp/starter/retrieval.py` and `starter/policy.py`, then add a test. The common runner handles GenieX loading and measurements. All commands below assume repository-root PowerShell and use the virtual environment explicitly; no activation is needed.
-
-Facilitators: read the [workshop structure](workshops/geniex-bootcamp/WORKSHOP-PLAN.md) and [delivery guide](workshops/geniex-bootcamp/INSTRUCTOR-GUIDE.md). The older standalone 101 material remains available as supplemental reading, not the current event sequence.
+Each command refuses to overwrite its evidence file. Change the filename for every repeat. A blocked run is evidence to inspect, not a reason to remove the safety checks.

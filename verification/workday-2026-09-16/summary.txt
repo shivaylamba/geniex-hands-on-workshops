@@ -1,0 +1,20 @@
+{
+  "status": "summary_ready",
+  "draft": "This project aims to build a simple portfolio website by resolving mobile navigation issues while adhering to a finalized design draft. The development will focus on functionality and user interface, with the analytics dashboard and any customer data collection components left for a future phase.",
+  "human_review_required": true,
+  "model": "unsloth/Qwen3.5-2B-GGUF",
+  "requested_device": "npu",
+  "mode": "summary",
+  "track": "starter",
+  "scenario": "normal",
+  "budget": 60,
+  "load_ms": 2628.0,
+  "metrics": [
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 270.915,
+      "prompt_tokens": 93,
+      "generated_tokens": 49
+    }
+  ]
+}

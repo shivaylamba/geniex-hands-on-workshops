@@ -1,0 +1,89 @@
+{
+  "utc_time": "2026-09-16T11:16:20.922528+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "architecture": "ARM64",
+  "python": "3.12.8",
+  "geniex": "v0.5.0",
+  "reference_tests_exit": 0,
+  "unfinished_starter_tests_exit": 1,
+  "cases": [
+    {
+      "case": "summary",
+      "flags": [
+        "--mode",
+        "summary"
+      ],
+      "exit_code": 0,
+      "status": "summary_ready",
+      "calls": 1
+    },
+    {
+      "case": "budget-60",
+      "flags": [
+        "--track",
+        "solution",
+        "--budget",
+        "60"
+      ],
+      "exit_code": 0,
+      "status": "draft_ready",
+      "calls": 4
+    },
+    {
+      "case": "budget-30",
+      "flags": [
+        "--track",
+        "solution",
+        "--budget",
+        "30"
+      ],
+      "exit_code": 0,
+      "status": "draft_ready",
+      "calls": 4
+    },
+    {
+      "case": "injection",
+      "flags": [
+        "--track",
+        "solution",
+        "--scenario",
+        "injection"
+      ],
+      "exit_code": 2,
+      "status": "blocked",
+      "calls": 8
+    },
+    {
+      "case": "budget-5",
+      "flags": [
+        "--track",
+        "solution",
+        "--budget",
+        "5"
+      ],
+      "exit_code": 2,
+      "status": "blocked",
+      "calls": 8
+    },
+    {
+      "case": "unfinished-starter",
+      "flags": [
+        "--track",
+        "starter",
+        "--max-steps",
+        "4"
+      ],
+      "exit_code": 2,
+      "status": "blocked",
+      "calls": 4
+    }
+  ],
+  "source_sha256": {
+    "workshops/workday-copilot/app.py": "b3c9f06cf66a6bddd19d8b40f963d429200e50121a68b05c55711a722ed58ea5",
+    "workshops/workday-copilot/agent.py": "d24d573d622e94dd7837795a8913da8bd32410b50677fb97a6bb65735540be5e",
+    "workshops/workday-copilot/starter.py": "0dfa1a148923d86e309f0e349c132cc4b24f75070cf12b35f535cf100f10e768",
+    "workshops/workday-copilot/solution.py": "c84cf9fe391aa29650fc3cbe926bd25fdf56895b33e0bd221e129b22eed0a9b7",
+    "workshops/workday-copilot/data/workday.json": "ccc9d586bf43299d3e1da24e20663fd9124cb141a699bd21cc857bfff80ab7ce",
+    "workshops/workday-copilot/tests/test_copilot.py": "9776ddabe3596b5db8828345df4eed9313e92b0174c0558cfe86a18fa54aaee9"
+  }
+}

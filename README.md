@@ -1,39 +1,41 @@
-# GenieX hands-on workshops
+# GenieX: build a local workday copilot
 
-Build a local AI assistant on a Snapdragon Windows laptop, then improve its source selection and test its reliability. This is a community-authored collection, not an official Qualcomm training release.
+“I have an hour. Read my project notes, help me choose what to do next, and draft an update.”
 
-**Team members and presenters: open [INTERNAL-WALKTHROUGH.md](INTERNAL-WALKTHROUGH.md) first.** It contains stepwise installation, execution order, expected results, troubleshooting, and a presenter rehearsal.
+Build that application on a Snapdragon laptop in two hours. Start with a useful summary, add a model-decided tool loop, then challenge its decisions and permissions. This community workshop is not an official Qualcomm training release.
 
-> [!IMPORTANT]
-> Finish software installation and model caching before class. Use a supported Snapdragon Windows ARM64 device and native ARM64 Python. No additional model is downloaded between the three segments.
+**Attendees: [START-HERE.md](START-HERE.md). Instructors and self-guided team members: [INTERNAL-WALKTHROUGH.md](INTERNAL-WALKTHROUGH.md).**
 
-## Workshops
+## What is GenieX doing here?
 
-| Workshop | Hands-on outcome | Time | Materials |
-|---|---|---:|---|
-| 101: Local inference | Run CLI and SDK; diagnose stale evidence | 25 min | [Open workshop](101-local-inference/README.md) |
-| 201: Evidence assistant | Implement source selection and a new test | 40 min | [Open workshop](201-evidence-assistant/README.md) |
-| Break | Swap pair roles | 5 min | — |
-| 301: Reliability lab | Build validation, attack outputs, measure tradeoffs | 40 min | [Open workshop](301-reliability-lab/README.md) |
-| Demos | Defend a release decision | 10 min | [Team demo](INTERNAL-WALKTHROUGH.md#8-present-it-to-the-team) |
+GenieX supplies local model execution and developer interfaces. Our Python application supplies tool permissions, time-budget checks, the loop, and human-review rules. The model suggests actions; ordinary code decides what can actually happen. See [the architecture and use-case rationale](workshops/workday-copilot/USE-CASE-DESIGN.md).
 
-Total: 120 minutes, excluding setup. See the [new laptop rehearsal report](verification/TEAM-REHEARSAL.md) for actual results and limitations. Working commands do not imply every model answer is correct.
+## Two-hour flow
 
-## Supporting materials
+The dedicated [WORKSHOP-STRUCTURE.md](WORKSHOP-STRUCTURE.md) maps objectives, learner decisions, files, and assessment.
 
-- [Small Python SDK example](101-local-inference/hello_geniex.py)
-- [Learner code](workshops/geniex-bootcamp/starter/) and [reference code](workshops/geniex-bootcamp/solution/)
-- [Common runner](workshops/geniex-bootcamp/app.py), [worksheet](workshops/geniex-bootcamp/WORKSHEET.md), and [instructor guide](workshops/geniex-bootcamp/INSTRUCTOR-GUIDE.md)
-- [Automated presenter rehearsal](scripts/rehearse_workshop.py)
+| Segment | Minutes | What participants produce |
+|---|---:|---|
+| [101: Understand and run](101-local-inference/README.md) | 25 | A local project-note summary and architecture sketch |
+| [201: Build the copilot](201-evidence-assistant/README.md) | 40 | Their own tested planning tool and an actual agent trace |
+| Break / swap roles | 5 | A new driver and reviewer |
+| [301: Challenge and improve](301-reliability-lab/README.md) | 40 | An edge-case test, two experiments, and a release judgment |
+| Share | 10 | A 60-second demo explaining one limitation |
 
-The numbered folders use the navigational style of the [UNO Q collection](https://github.com/aaishikasb/uno-q-workshops): prerequisites, setup, run, understand, and experiment. These GenieX lessons are independently authored; Arduino hardware instructions do not apply here.
+Setup and downloads happen before the clock starts. This is one progressive application, not three unrelated demonstrations. Timings are instructional targets, not novice-pilot measurements.
 
-This edition was developed on `codex/team-walkthrough` for a separate GenieX repository. The [original repository](https://github.com/shivaylamba/geniex-workshop) remains unchanged on main.
+## What gets built?
 
-The [older standalone 101 materials](workshops/geniex-101/README.md) remain as supplemental references. Their original timing and advanced-topic proposals are not the current event plan.
+The copilot can read one synthetic project note, list four tasks, check a proposed plan against the user's available minutes, and draft text. It cannot send messages, execute shell commands, browse files, or edit tasks. It saves an evidence JSON file only at the output path chosen by the human running the CLI.
 
-## Single-file AI handoff
+- [Working application](workshops/workday-copilot/app.py), [agent loop](workshops/workday-copilot/agent.py)
+- [Learner function](workshops/workday-copilot/starter.py), [reference implementation](workshops/workday-copilot/solution.py), [tests](workshops/workday-copilot/tests/test_copilot.py)
+- [Participant worksheet](workshops/workday-copilot/WORKSHEET.md)
+- [New laptop verification and limitations](verification/WORKDAY-COPILOT.md)
+- [Reusable Qualcomm workshop template](https://github.com/shivaylamba/qualcomm-ai-workshop-template)
 
-[`AI_AGENT_BUNDLE.md`](AI_AGENT_BUNDLE.md) contains a complete text snapshot of every other tracked repository file for AI systems that accept only one Markdown input.
+## Branch and earlier editions
 
-Maintainers: stage new files, run `.\.venv\Scripts\python.exe scripts/build_ai_bundle.py`, then stage the bundle. Use `--check` to verify it matches the current tracked working-tree contents.
+This redesign lives on `codex/geniex-workday-agent`. Main remains unchanged. The old event-information application in `workshops/geniex-bootcamp/` and standalone `workshops/geniex-101/` are legacy references, **not the attendee route for this branch**. Their tests and historical verification remain available; they do not establish that this new copilot works. The retained 201 directory name exists for link compatibility, not because source selection is still the central project.
+
+[AI_AGENT_BUNDLE.md](AI_AGENT_BUNDLE.md) is the single-file snapshot of tracked contents. Maintainers stage new files, run `python scripts/build_ai_bundle.py`, then stage the regenerated bundle. Use `--check` to verify it.

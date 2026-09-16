@@ -1,6 +1,6 @@
 # GenieX: 101 → 201 → 301
 
-> **Self-guided team edition:** start with [the internal walkthrough](../../INTERNAL-WALKTHROUGH.md) and the numbered top-level workshop folders. The implementation and detailed challenge resources below are shared by that edition.
+> **Legacy event-information application.** This branch now teaches [the workday copilot](../workday-copilot/README.md). The implementation and challenges below belong to the earlier edition, not the current numbered labs.
 
 A two-hour, code-first workshop. **[Participants start here](../../START-HERE.md).**
 

@@ -1,0 +1,130 @@
+{
+  "status": "draft_ready",
+  "plan": {
+    "task_ids": [
+      "T2",
+      "T4"
+    ],
+    "tasks": [
+      {
+        "id": "T2",
+        "title": "Draft teammate review request",
+        "minutes": 15
+      },
+      {
+        "id": "T4",
+        "title": "Check page titles",
+        "minutes": 10
+      }
+    ],
+    "total_minutes": 25,
+    "budget_minutes": 30,
+    "remaining_minutes": 5
+  },
+  "draft": "I will complete the teammate review request and check page titles, using the remaining 5 minutes.",
+  "human_review_required": true,
+  "trace": [
+    {
+      "step": 1,
+      "raw": "{\"tool\":\"read_note\",\"argument\":\"\"}",
+      "observation": {
+        "note": "Project: launch a simple portfolio website. Today: fix the mobile navigation, then ask a teammate to review. The design draft is approved. The analytics dashboard is optional and can wait. No customer or personal data is used in this exercise."
+      }
+    },
+    {
+      "step": 2,
+      "raw": "{\"tool\":\"list_tasks\",\"argument\":\"\"}",
+      "observation": {
+        "tasks": [
+          {
+            "id": "T1",
+            "title": "Fix mobile navigation",
+            "minutes": 35
+          },
+          {
+            "id": "T2",
+            "title": "Draft teammate review request",
+            "minutes": 15
+          },
+          {
+            "id": "T3",
+            "title": "Build analytics dashboard",
+            "minutes": 90
+          },
+          {
+            "id": "T4",
+            "title": "Check page titles",
+            "minutes": 10
+          }
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "raw": "{\"tool\":\"check_plan\",\"argument\":\"T2,T4\"}",
+      "observation": {
+        "validated_plan": {
+          "task_ids": [
+            "T2",
+            "T4"
+          ],
+          "tasks": [
+            {
+              "id": "T2",
+              "title": "Draft teammate review request",
+              "minutes": 15
+            },
+            {
+              "id": "T4",
+              "title": "Check page titles",
+              "minutes": 10
+            }
+          ],
+          "total_minutes": 25,
+          "budget_minutes": 30,
+          "remaining_minutes": 5
+        }
+      }
+    },
+    {
+      "step": 4,
+      "raw": "{\"tool\":\"finish\",\"argument\":\"I will complete the teammate review request and check page titles, using the remaining 5 minutes.\"}",
+      "observation": {
+        "status": "draft_ready_for_human_review"
+      }
+    }
+  ],
+  "model": "unsloth/Qwen3.5-2B-GGUF",
+  "requested_device": "npu",
+  "mode": "agent",
+  "track": "solution",
+  "scenario": "normal",
+  "budget": 30,
+  "load_ms": 2473.0,
+  "metrics": [
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 637.957,
+      "prompt_tokens": 269,
+      "generated_tokens": 9
+    },
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 797.628,
+      "prompt_tokens": 347,
+      "generated_tokens": 9
+    },
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 1025.729,
+      "prompt_tokens": 465,
+      "generated_tokens": 13
+    },
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 1259.157,
+      "prompt_tokens": 581,
+      "generated_tokens": 27
+    }
+  ]
+}

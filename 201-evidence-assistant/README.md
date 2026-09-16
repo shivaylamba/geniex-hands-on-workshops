@@ -1,80 +1,74 @@
-# 201: Build an evidence-aware local assistant
+# 201 — Build a local tool-using copilot
 
-**Duration:** 40 minutes. **Previous:** [101](../101-local-inference/README.md). **Next:** break, then [301](../301-reliability-lab/README.md).
+**40 minutes.** Requires [101](../101-local-inference/README.md). Next: [301](../301-reliability-lab/README.md). The folder name is retained for existing links; this lab now builds a workday copilot.
 
-## What you will build
+## Goal and checkpoint
 
-Write the selector deciding which documents reach the model. Handle stale information, untrusted content, irrelevant questions, and a budget. This is lexical retrieval, not a vector database or a complete retrieval solution.
+Implement the deterministic planning tool the model needs. Then inspect a real multi-step trace: the model proposes a tool call, Python validates and executes it, and the observation informs the next call.
 
-## Prerequisites and files
+Your deliverable is your own `check_plan`, passing learner tests, and either a reviewable draft or an explained blocked trace. Reading the solution alone does not complete the exercise.
 
-Complete 101 and reuse its device, environment, and model. No new download. Run everything from the repository root.
+## 1. Predict and trace — 6 minutes
 
-| File | Purpose |
-|---|---|
-| [starter/retrieval.py](../workshops/geniex-bootcamp/starter/retrieval.py) | Your implementation |
-| [documents.json](../workshops/geniex-bootcamp/data/documents.json) | Current, archived, and untrusted inputs |
-| [test_challenges.py](../workshops/geniex-bootcamp/tests/test_challenges.py) | Executable requirements |
-| [Detailed challenge](../workshops/geniex-bootcamp/labs/201-build-context.md) | Progressive hints after an attempt |
+Read [agent.py](../workshops/workday-copilot/agent.py), focusing on `run_agent`. Predict the shortest successful sequence before running it.
 
-## Step 1 — Classify and predict (5 minutes)
+| Model request | Host behavior | Permission |
+|---|---|---|
+| `read_note` | Return the one bundled note | No arbitrary filename |
+| `list_tasks` | Return the bundled task list | Read-only |
+| `check_plan` | Check IDs and total against the user's budget | Cannot change budget |
+| `finish` | Return a draft only after a valid plan | No sending |
 
-Read every document's status and text. Predict the selected IDs for room, laptop owner, and keynote speaker questions. Decide what should happen when there is no evidence.
+The model chooses its next request; the host does not hard-code a four-step answer. It may retry, choose a different plan, or run out of steps. The loop is limited to eight generations by default. This is application-level orchestration on GenieX, not a claim that GenieX itself is an agent framework.
 
-Why should a keyword-heavy archived source lose? Why should document text not override the application's instructions? Write your reasoning. Trust labels are supplied fixture metadata; your selector does not establish trust by itself.
+## 2. Make the red test meaningful — 4 minutes
 
-## Step 2 — Define a general policy (5 minutes)
-
-Implement `select_context(question, documents, max_chars=360)`:
-
-1. Reject nonpositive budgets with `ValueError`.
-2. Keep only `current` documents.
-3. Lowercase words and exclude common words that do not establish relevance.
-4. Score positive question/document word overlap; exclude zero overlap.
-5. Break equal scores by ascending document ID.
-6. Count each source as `len(id) + len(text) + 4` characters. Include whole sources that fit; skip oversized ones and consider later ones.
-7. Return an empty list if nothing qualifies. Never invent a source or hardcode answers.
-
-The character convention is not a token-accurate context bound. Prompt and template overhead still matter.
-
-## Step 3 — Implement and test (15 minutes)
-
-Replace the first-document baseline. Decompose the work into eligibility, scoring, ordering, and budget. Test **your starter**:
+Open [starter.py](../workshops/workday-copilot/starter.py). Only one function is missing; all model plumbing is supplied.
 
 ```powershell
-$previousWorkshopTrack = $env:WORKSHOP_TRACK
-try {
-    $env:WORKSHOP_TRACK = 'starter'
-    .\.venv\Scripts\python.exe -m pytest workshops/geniex-bootcamp/tests/test_challenges.py -k retrieval -q
-} finally {
-    $env:WORKSHOP_TRACK = $previousWorkshopTrack
-}
+$env:COPILOT_TRACK = 'starter'
+.\.venv\Scripts\python.exe -m pytest workshops/workday-copilot/tests/test_copilot.py -q -k plan
+Remove-Item Env:COPILOT_TRACK
 ```
 
-Initially all six retrieval tests fail; a correct implementation passes them. Do not edit assertions to make the report green. If stuck for five minutes, read one hint in the detailed challenge and explain it before continuing.
+Expected before you edit: failures involving `NotImplementedError`. Explain the first failure with your partner. Action-parser tests are already implemented and are not the coding task.
+
+## 3. Implement the contract — 16 minutes
+
+Implement `check_plan(task_ids, tasks, budget)` in starter.py:
+
+- Require an integer budget from 1 through 240; reject booleans.
+- Require a nonempty list of unique known string task IDs.
+- Look up trusted task durations and sum them in Python.
+- Reject a plan exceeding the user-supplied budget with `ValueError`.
+- Return selected records in requested order, IDs, total, budget, and remaining minutes.
+
+For T1 + T2 with a 60-minute budget, the total is 50 and remaining time is 10. For T3 at the same budget, reject it. Do not remove or edit supplied tests to make them pass.
+
+Driver writes code; reviewer checks the contract. Swap after eight minutes.
+
+Hint 1: create a dictionary indexed by task ID. Hint 2: validate IDs before looking them up. Hint 3: compare sets to detect duplicates, but preserve the input order in the returned plan. Open [solution.py](../workshops/workday-copilot/solution.py) only after an honest attempt.
+
+## 4. Test your implementation, then run it — 10 minutes
 
 ```powershell
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --evaluate --inspect
+$env:COPILOT_TRACK = 'starter'
+.\.venv\Scripts\python.exe -m pytest workshops/workday-copilot/tests -q
+Remove-Item Env:COPILOT_TRACK
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --track starter --budget 60 --output output/my-agent-60.json
+Get-Content output/my-agent-60.json
 ```
 
-The room selection includes `current-room` and excludes archived/untrusted sources. Keynote selects nothing. Extra eligible sources mentioning workshop can fit; explain the relevance-versus-distraction cost.
+The supplied suite contains 27 tests before you add any. Bare pytest defaults to the solution, so do not omit the environment selector when checking your function. The application uses the separate `--track starter` selector.
 
-## Step 4 — Make the supplied tests insufficient (8 minutes)
+Expected successful shape: `draft_ready`, a host-validated plan within 60 minutes, a draft, and a trace. T1 + T2 is sensible; other affordable selections are not automatically useful. Check priorities and prose yourself. No exact generated sentence is required.
 
-Create `workshops/geniex-bootcamp/tests/test_my_retrieval.py`. Use `from test_challenges import component` and call `component('retrieval').select_context(question, docs, budget)` on new fictional documents.
+If blocked, inspect the first trace error. Did the model request an unknown tool, select an unaffordable task, or did your function fail? Fix one cause and rerun with a new filename. Do not relax permissions to obtain a green status.
 
-Assert behavior for a huge top-ranked document, a keyword-stuffed archived source, or deterministic ties. Run the new file using the same temporary `WORKSHOP_TRACK=starter` setting. Have your partner predict IDs and budget arithmetic before running it.
+## 5. Explain what you built — 4 minutes
 
-Probe `--question "Where is the session located?" --inspect`. If synonyms defeat lexical matching, document the limitation instead of adding a hardcoded answer.
+Point to the observation that changed the model's next decision. Identify the deterministic fact (sum of durations) and the judgment call (what is useful). Why should the language model not authorize a larger budget for itself?
 
-## Step 5 — Reconnect to inference (7 minutes)
+Presenter-only recovery: use `--track solution` and label it reference code. Learners should still explain the difference.
 
-```powershell
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --policy solution --evaluate --output output/201-selected-context.jsonl
-```
-
-This uses **your selector** and the reference evidence validator to isolate retrieval. Compare `selected_ids`, `raw`, `accepted`, and `reasons`. Correct input can still produce malformed or unsupported output; rejection is not automatically a selector bug.
-
-Checkpoint: six retrieval tests and your new case pass against the starter; your worksheet records a tradeoff and limitation. Open the [reference implementation](../workshops/geniex-bootcamp/solution/retrieval.py) only after an attempt and label any borrowed code honestly.
-
-**Take five minutes, swap roles, then open [301](../301-reliability-lab/README.md).**
+Take a five-minute break, swap roles, and open [301](../301-reliability-lab/README.md).

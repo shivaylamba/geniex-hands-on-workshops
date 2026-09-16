@@ -1,5 +1,7 @@
 # Workshop structure: two hours of building with GenieX
 
+> **Historical plan.** Use [the current workday-copilot structure](../../WORKSHOP-STRUCTURE.md) for this branch. The source-selection project below is retained for reference.
+
 ## Outcome and scope
 
 Participants leave with a local assistant that selects evidence, generates an answer on Snapdragon, rejects several classes of invalid output, and records a small evaluation. They must explain a remaining failure and defend a release decision. A plausible answer is not enough.

@@ -1,80 +1,64 @@
-# 101: Run a local model and diagnose a broken assistant
+# 101 — Understand GenieX and get a useful first result
 
-**Duration:** 25 minutes after setup. **Next:** [201](../201-evidence-assistant/README.md).
+**25 minutes.** Before this lab, complete [setup](../INTERNAL-WALKTHROUGH.md#setup-before-class). Next: [201](../201-evidence-assistant/README.md). Keep [your worksheet](../workshops/workday-copilot/WORKSHEET.md) open.
 
-## What you will learn
+## Goal and checkpoint
 
-Generate text through GenieX's CLI and Python SDK, identify the requested compute device, and locate a stale-source bug. You do not train or fine-tune a model here.
+Explain what GenieX supplies, run a local model, and turn a project note into a readable summary. Checkpoint: show real output and point to the exact model call, not just an installation success message.
 
-## Session prerequisites
+## 1. Meet the problem — 3 minutes
 
-Complete [setup steps 1–3](../INTERNAL-WALKTHROUGH.md#1-check-the-laptop-and-install-the-cli). You need a supported Snapdragon Windows ARM64 laptop, native ARM64 Python, the GenieX CLI/SDK, and cached Q4_0 weights. One prepared device per pair is sufficient. There is no UNO Q board or wiring step.
+You have an hour before your next meeting. Your portfolio website needs work. What should you tackle, and what should you tell a teammate?
 
-Keep repository-root PowerShell, this page, and [the worksheet](../workshops/geniex-bootcamp/WORKSHEET.md) open side by side.
+Read [the fictional note and tasks](../workshops/workday-copilot/data/workday.json). Without AI, pick two tasks and calculate their duration. Keep that prediction; you will compare it with the copilot later. Ask: does a summary alone solve this problem?
 
-## Step 1 — Predict the failure (3 minutes)
+## 2. Put GenieX in the architecture — 7 minutes
 
-Open [the documents](../workshops/geniex-bootcamp/data/documents.json). Find the room in the first document and in `current-room`. These are fictional records.
-
-Write before executing: which room should we tell an attendee? What room will a first-document selector see? Could a bigger model reliably recover a fact the application never supplies?
-
-## Step 2 — Understand the path (5 minutes)
+[GenieX](https://geniex.aihub.qualcomm.com/en/get-started/what-is-geniex) is an on-device generative-AI runtime with developer interfaces. It is not the model weights, an agent framework, or your application's safety policy.
 
 ```text
-Question -> source selection -> chat template -> GenieX runtime
-         -> model generation on requested compute -> text -> output checks
+Your input → Python application → chat template → GenieX → local model → generated text
+                 ↑                                                    |
+                 └──────── validate / show / request next step ────────┘
 ```
 
-The model ID identifies the weights; `Q4_0` identifies their quantized representation; `npu` requests compute. Python file handling and ranking still run on the CPU. Context must accommodate instructions, source text, template, and output. Explain this diagram to your partner.
+This lab uses the Python SDK and a quantized GGUF model through the llama.cpp runtime with NPU compute requested. “2B” is model parameter scale; Q4_0 is the selected quantization; `npu` is a compute request. Python reads JSON and performs arithmetic on the CPU. Do not claim every operation runs on the NPU.
 
-AI Hub preparation/deployment and Arduino UNO Q development are adjacent topics in the broader workshop program, not prerequisites for this lab. This module teaches GenieX application development.
+Qualcomm AI Hub preparation/profiling and Arduino UNO Q application development are other tracks in the program, not prerequisites here. GenieX is the execution layer we need for this local text application.
 
-## Step 3 — Run the CLI and SDK (5 minutes)
+Partner challenge: label the model, runtime, application logic, and device separately. Who should enforce “do not send the message”? Answer: the application must provide no sending capability; prompting alone is insufficient.
 
-After configuring `geniex` in the setup note:
+## 3. Run the useful baseline — 7 minutes
+
+From the repository root:
 
 ```powershell
-geniex infer unsloth/Qwen3.5-2B-GGUF:Q4_0 --compute npu --think=false --max-tokens 80 -p "Explain on-device AI in two sentences."
-.\.venv\Scripts\python.exe 101-local-inference/hello_geniex.py
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --mode summary --output output/my-summary-1.json
+Get-Content output/my-summary-1.json
 ```
 
-Both should produce text without a hosted-model API key. The SDK example prints load time, TTFT, token count, and stop reason. Exact prose varies. A token-limit stop is different from a process crash.
+Expected: `status: summary_ready`, a draft based on the project note, and real generation metrics. Wording and sentence count can vary; manually check accuracy. No plan has been validated yet.
 
-Open [hello_geniex.py](hello_geniex.py). Locate model loading, chat templating, and generation. The `with` block releases the model. Change only the question:
+Open [app.py](../workshops/workday-copilot/app.py). Find these operations:
 
-```powershell
-.\.venv\Scripts\python.exe 101-local-inference/hello_geniex.py --question "Explain on-device AI to an event organizer in one sentence."
-```
+1. Load the fixed synthetic JSON input.
+2. Load the model through `AutoModelForCausalLM.from_pretrained`.
+3. Format messages with `apply_chat_template`.
+4. Call `generate` and record the output.
+5. Save a review-only result using the human-specified filename.
 
-Predict what changes. Does a request for a shorter answer guarantee a lower time to first token?
+The [official Python API reference](https://geniex.aihub.qualcomm.com/en/run/python/api-reference) documents these interfaces. The model is reset before each call so our full message history is not added to stale generation state.
 
-Read the explanation critically. In our rehearsal the changed question elicited an invented biometric-personalization scenario; this app does not collect biometric data. Successful generation does not make the explanation factual. Mark any unsupported claim before presenting it to someone else.
+## 4. Make one change — 5 minutes
 
-## Step 4 — Inspect before inferring (7 minutes)
+Change only the project note in the JSON file: make checking page titles the top priority. Keep the task IDs and durations unchanged. Predict the summary, then rerun to `output/my-summary-2.json`. Compare the two files.
 
-```powershell
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --inspect
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --output output/101-baseline.jsonl
-Get-Content output/101-baseline.jsonl | ForEach-Object { $_ | ConvertFrom-Json } | Format-List question,selected_ids,raw,accepted,reasons
-```
+Does the summary reflect your change? Does it invent completed work? Record an observed weakness even when the program exits successfully. Restore the original note manually before 201, keeping your observation in the worksheet.
 
-Inspection loads no model. Untouched starter code selects `archive-room`. Inference saves a result file; choose a new name when rerunning because overwrites are refused.
+## 5. Explain the next step — 3 minutes
 
-`accepted: true` currently means JSON parsing succeeded, not that the answer is correct. `reference_pass` is null for a custom single question; known-answer checks require `--evaluate`.
+A summary generates text in one call. The next lab lets the model request tools, see their results, and decide what to request next. That is useful when the answer requires inspecting data and checking a constraint, rather than just rephrasing a note.
 
-In [app.py](../workshops/geniex-bootcamp/app.py), trace selection, `build_messages`, template, generation, and validation. Loading happens outside the case loop; reset happens for each independent case. Which component should change first?
+Hint ladder: inspect the JSON input → find the summary system message → compare raw text with the note. If loading fails, return to setup; do not change model IDs randomly during class.
 
-## Step 5 — Explain your diagnosis (5 minutes)
-
-Give a 30-second explanation containing expected source, selected source, raw answer, and fix location. Your partner should repeat the explanation in their own words.
-
-Checkpoint: both interfaces ran, you identified stale input, and you distinguish parseable from correct. If inference fails, use [recorded evidence](../verification/TEAM-REHEARSAL.md) as explicitly labeled reference, not as your own run.
-
-## Troubleshooting
-
-- CLI not found: reopen PowerShell or repeat the full-path alias step in the internal guide.
-- SDK import fails: use the virtual-environment executable, not another system Python.
-- Missing weights: repeat setup checks; do not change models mid-lesson.
-- Wrong room: expected baseline behavior; temperature is not the first fix.
-
-**Continue to [201](../201-evidence-assistant/README.md).**
+Proceed to [201: build the planning tool](../201-evidence-assistant/README.md).

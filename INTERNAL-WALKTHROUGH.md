@@ -1,288 +1,178 @@
-# Internal team walkthrough: run and present the GenieX workshop
+# Internal walkthrough — run and teach the local workday copilot
 
-This is the starting document to share with teammates. It explains how to prepare a laptop, walk through the workshop independently, and present the result. It contains no private operational information; it is published in the public workshop repository for reuse.
+Share this page with teammates who want to rehearse independently. It is a public instructor note, not a private operations document. Attendees follow [START-HERE.md](START-HERE.md).
 
-## 0. Read this before running anything
+## The story you are teaching
 
-### What will I build?
+“I have an hour before my next meeting. Read my project note, select useful work that fits, and draft an update.”
 
-A small local event-information assistant. In 101 you run a model and discover an outdated room answer. In 201 you write source selection so only relevant, eligible documents reach the model. In 301 you write output checks, measure quality/latency tradeoffs, and demonstrate a limitation. All event documents are fictional.
+101 teaches the local model call. 201 turns it into a bounded tool-using application. 301 separates successful execution from reliable behavior. The user gets a proposed plan, not an automatically executed workday. Nothing is sent and no calendar is connected.
 
-You need basic Python functions, lists, dictionaries, and exceptions. You do not need previous model training experience. The same model is reused throughout; 201 and 301 are deeper application engineering, not larger downloads.
+[The rationale](workshops/workday-copilot/USE-CASE-DESIGN.md) explains alternatives and the technology boundaries. [The verification report](verification/WORKDAY-COPILOT.md) distinguishes real laptop runs from scripted tests.
 
-### Did everything work on our laptop?
+## Setup before class
 
-The executable workflow has been rerun on our Snapdragon X Elite laptop, including a fresh Python virtual environment. Read [TEAM-REHEARSAL.md](verification/TEAM-REHEARSAL.md) for exact counts, environment, failures, and raw evidence. A CLI readiness-check issue was found and corrected during this rehearsal.
+### 1. Check the device
 
-**Working end to end does not mean every answer is correct.** The starter is deliberately wrong. Even the completed application can reject model output or miss semantic errors; this is what 301 teaches. We have not repeated the Windows installer, tested every laptop, established air-gapped operation, or conducted a live novice timing pilot.
-
-### Choose your mode
-
-| Mode | Use when | Code you run | What it establishes |
-|---|---|---|---|
-| Learner | You want the full learning experience | Start with `--track starter`, implement the two functions | You can make and explain the changes |
-| Presenter rehearsal | You need to verify the demo before a meeting | Intentionally broken starter, then `--track solution` | The prepared machine can execute the workflow |
-| Code-only fallback | No supported device is available | Inspection and unit tests only | Python logic works; local inference remains unverified |
-
-Do not call reference-code execution your own completed exercise. Do not call code-only fallback an end-to-end device test.
-
-### File map and schedule
-
-| Order | Open | Time | Your output |
-|---|---|---:|---|
-| Prework | Steps 1–3 below | Variable, before class | Working CLI, Python environment, cached model |
-| 1 | [101-local-inference/README.md](101-local-inference/README.md) | 25 min | Real generation and baseline diagnosis |
-| 2 | [201-evidence-assistant/README.md](201-evidence-assistant/README.md) | 40 min | Selector, six passing supplied checks, new case |
-| Break | Swap pair roles | 5 min | — |
-| 3 | [301-reliability-lab/README.md](301-reliability-lab/README.md) | 40 min | Validator, experiment, limitation |
-| Demo | Step 8 below | 10 min | Evidence-backed release decision |
-
-Use [the worksheet](workshops/geniex-bootcamp/WORKSHEET.md) for your notes. The clock totals 120 minutes, excluding setup. Self-guided learners can take longer. Do not count installation as hands-on learning time.
-
-## 1. Check the laptop and install the CLI
-
-### 1.1 Hardware gate
-
-Use a Windows ARM64 laptop with a supported Snapdragon chipset. This edition was exercised on a Dell Latitude 7455, Snapdragon X Elite X1E80100, about 32 GB RAM. We are not claiming that this is a minimum-memory requirement or that all Snapdragon devices behave identically. Check [supported platforms](https://geniex.aihub.qualcomm.com/en/get-started/platforms) for another machine.
-
-Open PowerShell and inspect:
+This edition targets supported Snapdragon Windows ARM64 laptops. Our rehearsal machine is a Dell Latitude 7455, Snapdragon X Elite X1E80100, about 32 GB RAM. That is an observation, not a minimum specification.
 
 ```powershell
 Get-CimInstance Win32_Processor | Select-Object Name
 Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer,Model,SystemType
 ```
 
-You should identify a supported Snapdragon processor and ARM64 system. An Intel/AMD x64 laptop is not a substitute for this NPU lab. Plug into power, close unrelated model processes, and allow several GB of space for software in addition to the roughly 2.4 GiB cache.
+Compare another device with [Qualcomm's supported platforms](https://geniex.aihub.qualcomm.com/en/get-started/platforms). An x64 Intel/AMD laptop is not proof of this NPU path. Pair on a supported prepared device; code-only participation is possible but must be labeled.
 
-### 1.2 Install from the official source
+### 2. Install the official CLI
 
-Open [Qualcomm's Windows ARM64 CLI installation page](https://geniex.aihub.qualcomm.com/en/run/cli/install/#windows-arm64). Download its Windows installer and follow the installation prompts. Do not use a third-party mirror or the Linux shell instructions.
+Follow [Windows ARM64 installation](https://geniex.aihub.qualcomm.com/en/run/cli/install/#windows-arm64). Use the official installer and your organization's software approval process. Do not disable operating-system protections to make installation work.
 
-The page currently notes an unsigned installer. On a managed laptop, follow your organization's software approval process if Windows warns or blocks execution; this workshop does not require disabling Defender, SmartScreen, or corporate controls. Ask IT for an approved installation if necessary.
-
-Open a new PowerShell window after installation:
+In a new PowerShell:
 
 ```powershell
 Get-Command geniex -ErrorAction SilentlyContinue
-geniex --help
 geniex version
 geniex config get chipset
 ```
 
-Expected: command help, CLI/runtime versions, and a chipset value. Our CLI is v0.5.0. If the current official installer delivers a different version, record that fact and rehearse before teaching; do not silently describe it as the tested version.
-
-### 1.3 If `geniex` is not found
-
-The official page's `where.exe` example assumes the executable is already discoverable. A shell alias cannot locate an unknown install by itself. On our laptop, the installer used the per-user location below:
+If the command is not on PATH, check the actual installation location. On our prepared device it is:
 
 ```powershell
 $geniexCli = Join-Path $env:LOCALAPPDATA 'GenieX CLI\geniex.exe'
 Test-Path -LiteralPath $geniexCli
-& $geniexCli --help
-& $geniexCli version
-Set-Alias -Name geniex -Value $geniexCli
 ```
 
-Only run the executable/alias lines if `Test-Path` is true. If false, use the actual approved installer location. The alias lasts for the current PowerShell session; repeat it in a new terminal or have IT manage PATH. No global execution-policy change is needed.
-
-Checkpoint: `geniex --help` runs, version is recorded, and the chipset can be read. Do not proceed while commands are missing.
-
-## 2. Get the repository and prepare native Python
-
-### 2.1 Clone the team edition
-
-Install Git through your normal approved process if `git --version` is unavailable. Then, from a directory where you keep projects:
+Only if that returns True:
 
 ```powershell
-git clone https://github.com/shivaylamba/geniex-hands-on-workshops.git
-cd geniex-hands-on-workshops
-Get-Location
-Test-Path .\INTERNAL-WALKTHROUGH.md
+Set-Alias -Name geniex -Value $geniexCli
+geniex --help
+geniex version
 ```
 
-The last command must print `True`. **Every remaining workshop command assumes this repository root**, not a numbered workshop subfolder. The review branch is `codex/team-walkthrough`; the new repository's main branch also contains the published team edition.
+The alias lasts only for this terminal. CLI 0.5.0 is our recorded version; rehearse if your approved installation differs. Stop here if the executable or chipset cannot be discovered.
 
-If you already have this edition, inspect `git status` before pulling or switching branches. Preserve your edits. Use a second clone for a clean rehearsal instead of resetting learner work.
+### 3. Clone this exact branch
 
-### 2.2 Check the Python architecture
+Use a fresh directory for rehearsal, so you do not overwrite participant work:
 
-Follow the [official GenieX Python installation requirements](https://geniex.aihub.qualcomm.com/en/run/python/install). Use a maintained, organization-approved ARM64 Python 3.10+ build, not an AMD64 build running under emulation:
+```powershell
+git clone --branch codex/geniex-workday-agent https://github.com/shivaylamba/geniex-hands-on-workshops.git geniex-workday-workshop
+cd geniex-workday-workshop
+git branch --show-current
+Test-Path workshops/workday-copilot/app.py
+```
+
+Expected branch: `codex/geniex-workday-agent`; expected path result: True. Existing clones should inspect `git status` and preserve edits before switching. Do not reset learner code.
+
+Every command below runs from this repository root.
+
+### 4. Create native Python environment
+
+Follow the [official Python installation guidance](https://geniex.aihub.qualcomm.com/en/run/python/install). Have IT select a maintained ARM64 Python build. Our already-installed 3.12.8 was used for rehearsal; this is not a recommendation to install that old release.
 
 ```powershell
 python -c "import platform,sys; print(platform.python_version()); print(platform.machine()); print(sys.executable)"
-```
-
-The architecture must be `ARM64` (or the corresponding native ARM64 identifier). A wrong interpreter must be corrected before creating the environment. Our existing laptop interpreter is Python 3.12.8; that is a test observation, **not a recommendation to install an old interpreter**. Python's [3.12.8 release page](https://www.python.org/downloads/release/python-3128/) notes supersession and revoked installer certificates. Have IT select a maintained ARM64 build, then run this rehearsal with it.
-
-### 2.3 Create and install the isolated environment
-
-For a fresh clone:
-
-```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe -m pip check
 .\.venv\Scripts\python.exe -c "import platform,geniex; print(platform.machine()); print(geniex.version())"
 ```
 
-The requirements include a dependency lock from this rehearsal, including GenieX 0.5.0 and pytest 9.1.1. Expected: no broken requirements, native architecture, and the SDK version. Use the virtual-environment executable explicitly throughout; activation and changing PowerShell execution policy are unnecessary.
+Confirm native ARM64, not emulated AMD64. The pinned dependencies include GenieX 0.5.0 and pytest 9.1.1. No environment activation or machine-wide PowerShell policy change is needed. Use an alternate new environment name if `.venv` already contains unrelated work.
 
-Do not overwrite an existing environment with an unknown interpreter. For a clean-room check, create another environment under a distinct name and substitute its executable consistently. Our verification used `.venv-team` with fresh Python packages, but reused the already installed CLI, drivers, and cache.
-
-### 2.4 Verify runtime discovery
+Check runtime discovery:
 
 ```powershell
 .\.venv\Scripts\python.exe -c "import geniex; geniex.init(); print(geniex.get_runtime_list()); print(geniex.get_compute_unit_list('llama_cpp')); geniex.deinit()"
 ```
 
-On our prepared laptop, output includes `llama_cpp` and a Hexagon/HTP compute entry. Names may differ on another supported setup. Discovery does not prove generation works; the next gate runs it.
+Our output includes llama.cpp and a Hexagon/HTP compute entry. Discovery alone is not an inference test.
 
-## 3. Cache the model and pass readiness
-
-### 3.1 Download once, before the workshop
+### 5. Cache the model once
 
 ```powershell
 geniex pull --model-type llm unsloth/Qwen3.5-2B-GGUF:Q4_0
 geniex list
 ```
 
-This fixes the exercise's model type and precision. The text weights are 1,214,873,856 bytes (~1.13 GiB). GenieX also caches a ~1.23 GiB projector from this repository; the visible cache is approximately 2.4 GiB even though the workshop uses text only. Do not mistake cache size for parameter count or promise a one-GB total download.
+The text weights are approximately 1.13 GiB; the current download also includes an approximately 1.23 GiB projector, for around 2.4 GiB of model cache. Allow additional space for software. We use text only. Check model distribution terms before redistributing cached assets. Initial installation/downloads require connectivity; cached execution was tested on a connected machine, not an air-gapped one.
 
-The [official quickstart](https://geniex.aihub.qualcomm.com/en/run/cli/quickstart) distinguishes GGUF/llama.cpp from AI Hub/QAIRT and recommends Q4_0 for Hexagon use. This workshop keeps the previously validated 2B model rather than adopting a different example model during setup. Model distribution terms must be checked before redistributing a prebuilt cache.
+See the [official quickstart](https://geniex.aihub.qualcomm.com/en/run/cli/quickstart) for the CLI and runtime distinction. Keep the same model throughout this workshop.
 
-### 3.2 Run readiness and the first real inference
+### 6. Pass the real readiness gate
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\workshops\geniex-101\setup\verify_environment.ps1
-geniex infer unsloth/Qwen3.5-2B-GGUF:Q4_0 --compute npu --think=false --max-tokens 80 -p "Explain on-device AI in two sentences."
 .\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --mode summary --output output/preflight-summary.json
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --track solution --budget 60 --output output/preflight-agent.json
 ```
 
-The first command invokes a repository-local checker in a child PowerShell process; it does not change machine-wide policy. Follow IT policy if script execution is restricted.
+On the unchanged branch, tests should report 60 passes: 27 new copilot tests plus 33 retained legacy tests. They default to reference code. Expected inference shape: summary_ready, then draft_ready with a valid plan and a review-only draft. Generated wording may vary. Read the trace and plan; do not just look at the exit code.
 
-Expected readiness: five passing checks and `Environment ready for GenieX 101.` That last string is retained from the shared setup helper; it gates the whole current sequence. Expected tests on an unchanged release: **33 passing tests**. Expected inference: generated text, not a specific memorized sentence.
+Evidence files never overwrite. For repeats, use new filenames. A blocked application returns code 2; a successful summary or draft returns 0. A blocked model run may still mean the host boundary worked correctly.
 
-Tests default to the reference implementations. These 33 passes validate the supplied code, not your untouched starter. The later labs explicitly select learner code.
+## Rehearse the attendee journey
 
-### 3.3 Offline claim: verify separately
+For a repeatable presenter check, run `.\.venv\Scripts\python.exe scripts/rehearse_workday.py --output-dir output/my-rehearsal-1`. It runs tests and six real-device scenarios, preserving logs and source hashes in a new directory. Inspect all outcomes: its basic smoke-check exit code does not certify draft accuracy or every scenario's task completion.
 
-These rehearsals use cached models on a connected laptop. They do not prove air-gapped behavior. Before promising an offline event, with local access and IT approval, disconnect the test machine's network after caching and repeat the CLI and Python examples. Restore connectivity afterward. Do not disconnect a remote-access machine merely to complete this checklist.
+1. Open [101](101-local-inference/README.md). Predict the summary, run it, change the note, compare, then restore the note.
+2. Open [201](201-evidence-assistant/README.md). Set COPILOT_TRACK=starter for tests. Confirm the untouched function fails. Implement it or, for a presenter rehearsal only, compare with solution.py.
+3. Run the agent on the selected track. Inspect each tool request and observation. T1 + T2 totals 50 minutes; prose about extra work is not independently verified.
+4. Open [301](301-reliability-lab/README.md). Add one test; run the 30-minute scenario and either injection or impossible-budget scenario.
+5. Complete [the worksheet](workshops/workday-copilot/WORKSHEET.md). Prepare a demo that includes a limitation.
 
-Readiness exit: you know the hardware and versions, have a cached model, have generated actual text, and have passing reference tests. Only now start the two-hour clock.
+If you are rehearsing without implementing learner code, use --track solution in application commands and leave COPILOT_TRACK unset for tests. Clearly label this presenter/reference mode. Do not claim to have completed learner tasks.
 
-## 4. Walk through 101 yourself
+## Facilitation plan
 
-Open [101-local-inference/README.md](101-local-inference/README.md) and follow its five numbered steps. Run the CLI, the small standalone Python example, and the broken assistant. Inspect sources before interpreting the model answer.
-
-Your files are [hello_geniex.py](101-local-inference/hello_geniex.py) for the minimal API path and [app.py](workshops/geniex-bootcamp/app.py) for the full pipeline. Record the room prediction in the worksheet before running.
-
-Expected lesson, not guaranteed sentence: the starter selects archived Cedar instead of current Maple. A different generated answer does not fix the missing-current-source problem. Identify the application component responsible.
-
-## 5. Build 201 yourself
-
-Open [201-evidence-assistant/README.md](201-evidence-assistant/README.md). Edit only `workshops/geniex-bootcamp/starter/retrieval.py` for the selector, then add your own test under the bootcamp tests directory.
-
-The six retrieval tests initially fail. Follow the temporary `WORKSHOP_TRACK=starter` command exactly. A bare repository-wide pytest run defaults to the solution and will conceal whether your implementation is still wrong.
-
-Your exit evidence: six passing learner retrieval checks, your new adversarial case, inspected sources for all five fixtures, and an actual `--track starter --policy solution --evaluate` run. That mixed configuration deliberately isolates retrieval from validation, which you have not built yet.
-
-Take the five-minute break and change pair roles.
-
-## 6. Build 301 yourself
-
-Open [301-reliability-lab/README.md](301-reliability-lab/README.md). Edit `workshops/geniex-bootcamp/starter/policy.py`; validate schema and evidence, then run 24-token versus 160-token experiments. Use new filenames to preserve observations.
-
-The policy starts with two passing checks and eight failures; the completed contract has ten passes. Together with retrieval there are 16 challenge checks. Extra tests you write will increase the count.
-
-Read raw answers as well as summary counts. The fixture evaluator is intentionally narrow and can reject a supported “Yes.” A real quotation can also accompany a false answer. Neither JSON validity nor source provenance guarantees semantic truth.
-
-Finish the worksheet with a hypothesis, controlled variable, both result tables, manual review, an adversarial case, and a release decision. Do not claim production readiness based on five development fixtures.
-
-## 7. Run a presenter rehearsal without doing the exercises
-
-Use this on a **clean checkout** to verify the machine before presenting. It does not edit starter files, install software, delete results, or simulate a participant completing the exercises.
-
-```powershell
-.\.venv\Scripts\python.exe scripts/rehearse_workshop.py --output output/team-rehearsal-01
-```
-
-It runs dependency/readiness checks, CLI help and generation, both small SDK examples, reference tests, intentional starter failures, both inspection paths, four evaluation runs, and protective error checks. It writes a new evidence directory. Our warm-cache run took minutes, not hours; duration varies by hardware and runtime state.
-
-If the CLI is installed in a custom location:
-
-```powershell
-.\.venv\Scripts\python.exe scripts/rehearse_workshop.py --cli 'C:\approved-tools\GenieX\geniex.exe' --output output/team-rehearsal-02
-```
-
-Replace that illustrative path with your actual approved executable location. The script does not install there.
-
-Read `summary.json`, not just the last terminal line:
-
-```powershell
-$rehearsal = Get-Content output/team-rehearsal-01/summary.json -Raw | ConvertFrom-Json
-$rehearsal.workflow_passed
-$rehearsal.steps | Format-Table step,passed,exit_code,expected_exit_code,elapsed_seconds
-$rehearsal.experiments | ConvertTo-Json -Depth 5
-```
-
-`workflow_passed: true` means every process/check ran as expected and the expected number of nonempty generation records was produced. It **does not** require every generated answer to pass validation. The starter tests intentionally exit 1; invalid arguments and overwrite protection intentionally exit 2. Those are expected passes in the harness, not hidden errors.
-
-If you've already completed the starter, its intentional-failure stage may stop the rehearsal. Use a second clean clone, not a destructive reset. The script assumes the five stock fixtures; added cases should be evaluated directly and described separately.
-
-## 8. Present it to the team
-
-### Ten-minute internal overview
-
-1. **Minute 0–1:** open this file and explain the deliverable: a local assistant plus evidence about its limitations.
-2. **Minute 1–3:** show a CLI or small SDK generation. State the device, model, precision, and requested compute. Do not promise identical prose.
-3. **Minute 3–5:** inspect the broken selector, then reference selection. Show exactly which source changed.
-4. **Minute 5–7:** show an evaluation JSONL with raw output, rejection reason, and timings. Explain the three different pass rates.
-5. **Minute 7–9:** demonstrate a false answer with a real quotation, or the fixture's false rejection of “Yes.” Ask the team whether they would ship it unattended.
-6. **Minute 9–10:** open the numbered folders and assign teammates the self-guided sequence. Point to the worksheet and explain how to test starter code.
-
-For a live comparison without changing learner code:
-
-```powershell
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --inspect
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track solution --inspect
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track solution --evaluate --output output/team-demo.jsonl
-```
-
-Say explicitly that the last command uses the completed reference. Keep the published rehearsal logs ready as a fallback, clearly labeled as recorded rather than live.
-
-### Ninety-second participant demo
-
-Show your selector (20 seconds), validator/rejection (20 seconds), experiment plus limitation (30 seconds), and release decision/next test (20 seconds). Sample four pairs during the ten-minute workshop close and collect the remaining worksheets. The [instructor guide](workshops/geniex-bootcamp/INSTRUCTOR-GUIDE.md) contains a ten-point assessment rubric and recovery timings.
-
-## 9. Troubleshooting and stopping rules
-
-| Symptom | Likely check | Safe next action |
+| Clock | Lead action | Participant evidence |
 |---|---|---|
-| `geniex` not found | Installer location / new shell | Use verified full path or session alias |
-| Corporate installer block | Software approval | Ask IT; do not disable security controls |
-| Python says AMD64 | Wrong interpreter | Create a new environment with approved ARM64 Python |
-| `No module named geniex` | Wrong environment or incomplete install | Use explicit `.venv` executable and rerun dependency installation |
-| No Hexagon entry or load error | Supported platform, drivers, runtime | Validate approved driver/runtime setup; use a prepared pair |
-| Environment CLI check fails | Version and chipset exit codes | Run both directly; current checker consumes full output before checking status |
-| Model missing or prompt to download | Cache, model ID, Q4_0 | Finish prework; do not switch model during class |
-| JSON truncated | `stop_reason` and token count | Preserve the run and compare a larger output budget |
-| Output rejected despite plausible prose | Exact schema, source, quotation | Inspect reasons; do not silently repair evaluation results |
-| All tests pass before coding | Default solution target | Rerun the learner-targeted commands |
-| Rehearsal fails intentional-starter step | Starter already modified | Use a second clean clone; preserve your work |
-| Output already exists | Reused experiment name | Choose a new filename or directory |
-| Device overloaded / allocation error | Other model processes and memory | Stop your own competing runs and retry serially |
+| 0–3 | Ask “what would you do with one free hour?” | Two chosen tasks and manual sum |
+| 3–10 | Draw the model/runtime/app/device distinction | Annotated diagram |
+| 10–25 | Guide the first run and one changed input | Two summaries and a comparison |
+| 25–35 | Explain the tool loop and contract; show failing starter check | Predicted action sequence |
+| 35–51 | Coach implementation; swap driver after eight minutes | Working planning function |
+| 51–65 | Run and explain the agent | Trace with actual observations |
+| 65–70 | Break and role swap | — |
+| 70–87 | Threat-model and add a test | One participant-authored check |
+| 87–100 | Compare real scenarios | Two evidence files |
+| 100–110 | Improve one behavior and decide release readiness | Before/after and limitation |
+| 110–120 | Invite 60-second demos and debrief | Explanation, not just screenshots |
 
-Do not spend the class downloading software. Pair with a ready device or explicitly use code-only fallback. Do not claim unsupported hardware, disconnected-network operation, or a fixed model accuracy from another person's logs.
+Use hint ladders from the labs before revealing code. Ask “which layer owns this failure?” rather than immediately giving the answer. Early finishers can adapt the note to a study session or hobby project while preserving the same trusted task schema. Keep the application scope bounded.
 
-## 10. Before distributing this to an event
+## Instructor answer notes
 
-- Rehearse on each intended machine image; record versions and model/cache provenance.
-- Confirm organizational approval for software and model redistribution.
-- Run a novice timing pilot; this agenda has not been empirically validated with a class.
-- Keep learner and reference code separate; preserve participant outputs and label recorded demos.
-- Review logs before sharing. The supplied fixtures are fictional; do not publish attendee data or private prompts.
-- For this repo's AI handoff, stage new files, run `python scripts/build_ai_bundle.py`, stage the bundle, and check with `--check`.
+- T1 + T2 = 50; adding T4 fills 60. T3 alone exceeds 60.
+- At 30 minutes, T2 + T4 fits; priority awareness is still a model-quality question.
+- At five minutes, no provided task fits. A blocked result is expected.
+- The agent can read/list in either order, but must observe both and validate a plan before finishing.
+- Host tools provide data and arithmetic; model prose can still misstate facts or imply work is complete.
+- A prompt injection may alter prose even if no forbidden tool can execute.
+- A valid revised plan replaces the old one; an invalid revision clears prior approval.
+- The tiny model may produce malformed JSON or repeat calls. Count errors toward the same bound.
+- A scripted fake-model test proves the host behavior for that script, not successful real inference.
 
-## Sources and scope
+## Troubleshooting and recovery
 
-Checked 15 September 2026: [official Windows CLI installation](https://geniex.aihub.qualcomm.com/en/run/cli/install/#windows-arm64), [Python installation](https://geniex.aihub.qualcomm.com/en/run/python/install), [CLI quickstart](https://geniex.aihub.qualcomm.com/en/run/cli/quickstart), and [GenieX upstream](https://github.com/qualcomm/GenieX). The [UNO Q collection](https://github.com/aaishikasb/uno-q-workshops) informed the numbered-workshop presentation, not the GenieX API or hardware facts. This guide's commands and outputs are grounded in the supplied source code and local rehearsal, with untested boundaries called out above.
+| Symptom | Inspect | Recovery |
+|---|---|---|
+| CLI or import missing | Installation path, selected Python | Return to setup, not a random package upgrade |
+| Wrong architecture/runtime | ARM64 output and supported hardware | Use a prepared device or label code-only |
+| Starter tests fail immediately | NotImplementedError | Implement the contract; this initial failure is intentional |
+| Tests pass but app blocks | COPILOT_TRACK vs --track, first trace error | Select the intended code and fix one cause |
+| Model emits bad JSON | Raw request and parser error | Keep the rejected trace; retry once with a new filename |
+| Eight calls with no draft | Unaffordable tasks/repeated requests | Inspect as a 301 failure; do not remove the bound |
+| Output file already exists | Chosen filename | Use a new filename; preserve evidence |
+| Plan seems right, prose is wrong | Draft against validated plan | Reject/edit the draft manually; no auto-send exists |
+
+For a live device failure, inspect the committed real traces in the verification folder and run deterministic tests. State plainly that this is a trace-based fallback, not a fresh device demo. Do not pretend the saved run just occurred.
+
+## Release rubric and rehearsal limits
+
+One point each: explain GenieX's role; implement and explain the tool; demonstrate real observations; test a failure; state a justified limitation. Target 4/5 with the permissions explanation mandatory.
+
+Before teaching on new hardware, rerun setup and all planned scenarios. Recheck installation docs and model terms; document versions and actual outcomes. This run did not reinstall Windows, drivers, or the CLI, certify all Snapdragon devices, establish disconnected operation, or validate novice completion times.
+
+The earlier event-information edition remains in [the historical walkthrough](LEGACY-INTERNAL-WALKTHROUGH.md). Do not mix that edition's counts or app commands into this branch's attendee flow.

@@ -1,0 +1,130 @@
+{
+  "status": "draft_ready",
+  "plan": {
+    "task_ids": [
+      "T1",
+      "T2"
+    ],
+    "tasks": [
+      {
+        "id": "T1",
+        "title": "Fix mobile navigation",
+        "minutes": 35
+      },
+      {
+        "id": "T2",
+        "title": "Draft teammate review request",
+        "minutes": 15
+      }
+    ],
+    "total_minutes": 50,
+    "budget_minutes": 60,
+    "remaining_minutes": 10
+  },
+  "draft": "I will complete T1 (fix mobile navigation) and T2 (draft teammate review), using my remaining 10 minutes effectively.",
+  "human_review_required": true,
+  "trace": [
+    {
+      "step": 1,
+      "raw": "{\"tool\":\"read_note\",\"argument\":\"\"}",
+      "observation": {
+        "note": "Project: launch a simple portfolio website. Today: fix the mobile navigation, then ask a teammate to review. The design draft is approved. The analytics dashboard is optional and can wait. No customer or personal data is used in this exercise."
+      }
+    },
+    {
+      "step": 2,
+      "raw": "{\"tool\":\"list_tasks\",\"argument\":\"\"}",
+      "observation": {
+        "tasks": [
+          {
+            "id": "T1",
+            "title": "Fix mobile navigation",
+            "minutes": 35
+          },
+          {
+            "id": "T2",
+            "title": "Draft teammate review request",
+            "minutes": 15
+          },
+          {
+            "id": "T3",
+            "title": "Build analytics dashboard",
+            "minutes": 90
+          },
+          {
+            "id": "T4",
+            "title": "Check page titles",
+            "minutes": 10
+          }
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "raw": "{\"tool\":\"check_plan\",\"argument\":\"T1,T2\"}",
+      "observation": {
+        "validated_plan": {
+          "task_ids": [
+            "T1",
+            "T2"
+          ],
+          "tasks": [
+            {
+              "id": "T1",
+              "title": "Fix mobile navigation",
+              "minutes": 35
+            },
+            {
+              "id": "T2",
+              "title": "Draft teammate review request",
+              "minutes": 15
+            }
+          ],
+          "total_minutes": 50,
+          "budget_minutes": 60,
+          "remaining_minutes": 10
+        }
+      }
+    },
+    {
+      "step": 4,
+      "raw": "{\"tool\":\"finish\",\"argument\":\"I will complete T1 (fix mobile navigation) and T2 (draft teammate review), using my remaining 10 minutes effectively.\"}",
+      "observation": {
+        "status": "draft_ready_for_human_review"
+      }
+    }
+  ],
+  "model": "unsloth/Qwen3.5-2B-GGUF",
+  "requested_device": "npu",
+  "mode": "agent",
+  "track": "solution",
+  "scenario": "normal",
+  "budget": 60,
+  "load_ms": 2514.8,
+  "metrics": [
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 631.952,
+      "prompt_tokens": 269,
+      "generated_tokens": 9
+    },
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 799.006,
+      "prompt_tokens": 347,
+      "generated_tokens": 9
+    },
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 1027.326,
+      "prompt_tokens": 465,
+      "generated_tokens": 13
+    },
+    {
+      "stop_reason": "eos",
+      "ttft_ms": 1262.884,
+      "prompt_tokens": 582,
+      "generated_tokens": 35
+    }
+  ]
+}

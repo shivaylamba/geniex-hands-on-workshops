@@ -1,0 +1,9 @@
+{
+  "note": "Project: launch a simple portfolio website. Today: fix the mobile navigation, then ask a teammate to review. The design draft is approved. The analytics dashboard is optional and can wait. No customer or personal data is used in this exercise.",
+  "tasks": [
+    {"id": "T1", "title": "Fix mobile navigation", "minutes": 35},
+    {"id": "T2", "title": "Draft teammate review request", "minutes": 15},
+    {"id": "T3", "title": "Build analytics dashboard", "minutes": 90},
+    {"id": "T4", "title": "Check page titles", "minutes": 10}
+  ]
+}

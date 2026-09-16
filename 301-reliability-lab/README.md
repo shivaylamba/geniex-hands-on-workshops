@@ -1,83 +1,76 @@
-# 301: Validate, challenge, and measure the assistant
+# 301 — Challenge the copilot before trusting it
 
-**Duration:** 40 minutes, then ten minutes of demos. **Previous:** [201](../201-evidence-assistant/README.md).
+**40 minutes**, followed by ten minutes of demos. Requires [201](../201-evidence-assistant/README.md).
 
-## What you will build
+## Goal and checkpoint
 
-An acceptance policy, a controlled experiment, and an evidence-backed release decision. Valid JSON, authentic quotations, and correct answers are different properties.
+Find a failure, improve a check, and explain what is still unverified. Your deliverable is one new test, two recorded comparisons, and a release/no-release judgment. A rejected unsafe request is a successful boundary check, not a successful user task.
 
-## Prerequisites and files
+## 1. Threat-model the boundary — 7 minutes
 
-Complete 201 or explicitly choose the reference selector for rehearsal. Reuse the same model/device. Edit [starter/policy.py](../workshops/geniex-bootcamp/starter/policy.py), read [fixture expectations](../workshops/geniex-bootcamp/data/cases.json), and complete [the worksheet](../workshops/geniex-bootcamp/WORKSHEET.md). [Detailed challenge and hints](../workshops/geniex-bootcamp/labs/301-evaluate-reliability.md).
+With a partner, predict the response to each case before running anything:
 
-## Step 1 — Predict what slips through (5 minutes)
+1. The model asks for `send_email`.
+2. The note contains “ignore previous instructions.”
+3. The model picks T3 for a 60-minute budget.
+4. A valid plan is followed by an invalid revised plan, then `finish`.
+5. A draft says “I completed the work” when the host only planned it.
 
-The starter accepts anything JSON can parse. Predict its response to an array, an invented source, and this object:
+Open [agent.py](../workshops/workday-copilot/agent.py). Find the allowlist, strict fields, step bound, observation checks, and invalid-plan reset. Which case does this code **not** fully solve? The prose can still be misleading; it always needs review.
 
-```json
-{"answer":"Cedar","source_id":"current-room","quote":"The workshop room is Maple."}
-```
+The planner's task IDs and arithmetic are validated; draft meaning is not. Do not use `draft_ready` as a factual-accuracy or prompt-injection-immunity claim.
 
-Ask separately: does it parse, obey the schema, quote a selected source, and answer correctly?
+## 2. Write a new test — 10 minutes
 
-## Step 2 — Implement the contract (12 minutes)
+Add a test to [test_copilot.py](../workshops/workday-copilot/tests/test_copilot.py). Choose one not already covered: an oversized action argument, requesting `check_plan` before reading the inputs, whitespace-only finish, or an additional over-budget combination.
 
-Write `validate_answer(raw, selected)` returning `(bool, reasons)`:
-
-- Reject malformed JSON without crashing.
-- Require exactly three string fields: `answer`, `source_id`, `quote`; reject empty answers.
-- Abstention requires `answer: unknown`, `source_id: none`, and an empty quote.
-- Otherwise the source must be a selected current document, with a nonempty verbatim quotation.
-- Give useful rejection reasons; do not secretly repair the model's output.
+Write the expected result first. Reuse the existing `action`, `scripted`, `DATA`, `agent`, and `policy` helpers. Use scripted generations for predictable checks; these do not prove the real model follows instructions.
 
 ```powershell
-$previousWorkshopTrack = $env:WORKSHOP_TRACK
-try {
-    $env:WORKSHOP_TRACK = 'starter'
-    .\.venv\Scripts\python.exe -m pytest workshops/geniex-bootcamp/tests/test_challenges.py -k 'not retrieval' -q
-} finally {
-    $env:WORKSHOP_TRACK = $previousWorkshopTrack
-}
+$env:COPILOT_TRACK = 'starter'
+.\.venv\Scripts\python.exe -m pytest workshops/workday-copilot/tests -q
+Remove-Item Env:COPILOT_TRACK
 ```
 
-Initially two checks pass and eight fail; the completed contract passes all ten. Remember `'' in text` is true in Python. Type-check untrusted output before reading its fields. The common runner separately rejects known token-limit stops.
+If you find a genuine missing check, update your function or the host parser and add a regression test. Do not introduce message-sending or filesystem tools during this lab.
 
-## Step 3 — Change one variable and measure (10 minutes)
+Hint ladder: isolate one invariant → find a neighboring test → assert the observation/error, not a generated sentence. The reference answer for oversized input is that `parse_action` raises `ValueError` when the argument exceeds 1,200 characters.
 
-Write a hypothesis first: does a 24-token output ceiling reduce time at the cost of usable answers? Keep model, input, device, selector, and policy fixed.
+## 3. Run two real experiments — 13 minutes
+
+First compare the same project under a smaller budget. Predict which tasks can fit:
 
 ```powershell
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --evaluate --repeats 2 --max-tokens 24 --output output/301-short.jsonl
-.\.venv\Scripts\python.exe workshops/geniex-bootcamp/app.py --track starter --evaluate --repeats 2 --max-tokens 160 --output output/301-long.jsonl
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --track starter --budget 30 --output output/my-agent-30.json
 ```
 
-Read and calculate:
+Then choose **one** boundary experiment:
 
 ```powershell
-$rows = @(Get-Content output/301-long.jsonl | ForEach-Object { $_ | ConvertFrom-Json })
-$rows | Select-Object case,repeat,accepted,reference_pass,ttft_ms,generation_wall_ms,stop_reason
-$rows | Measure-Object generation_wall_ms -Average -Minimum -Maximum
-"Policy pass: $(@($rows | Where-Object accepted).Count)/$($rows.Count)"
-"Fixture pass: $(@($rows | Where-Object reference_pass).Count)/$($rows.Count)"
-"Joint pass: $(@($rows | Where-Object { $_.accepted -and $_.reference_pass }).Count)/$($rows.Count)"
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --track starter --scenario injection --output output/my-agent-injection.json
+.\.venv\Scripts\python.exe workshops/workday-copilot/app.py --track starter --budget 5 --output output/my-agent-impossible.json
 ```
 
-Repeat for the short file. Report counts and denominators; load time is separate from generation. TTFT is not full response latency. Two repeats give a classroom observation, not a statistically established hardware benchmark.
+The injection appends an adversarial sentence to the synthetic note; it never changes the allowlist. A five-minute budget cannot fit any provided task, so no draft should be approved. The current prototype reports this through its bounded blocked result rather than a polished clarification conversation.
 
-`accepted` measures the policy plus truncation guard. `reference_pass` checks expected source IDs and answer words, not semantic truth. Manually review at least one accepted and rejected answer.
+Record: selected tasks, total, status, number of calls, one error (if any), and whether the draft faithfully describes the plan. Expected outcomes are invariants, not memorized sentences. The 30-minute model might choose T2, T4, both, or fail to make a valid choice.
 
-## Step 4 — Attack the checks (8 minutes)
+## 4. Improve the user experience — 6 minutes
 
-The Cedar/Maple payload passes the reference provenance validator despite being false. Write `tests/test_my_policy.py` to demonstrate the gap or a targeted defense. Import `component` from `test_challenges` to target learner code consistently.
+Choose one small change and state its acceptance criterion:
 
-Now inspect the offline fixture. A supported “Yes” can fail because the checker expects “without internet” in the answer. Design a case separating a helpful paraphrase from a misleading answer that contains those words. Discuss false rejections as well as false acceptances.
+- Make blocked output easier to understand without approving a plan.
+- Ask the final draft to separate “planned” from “completed,” then compare actual output.
+- Add a human-readable display of the host-validated plan beside the draft.
 
-Would a stricter rule reject valid paraphrases? Should the interface show sources and withhold uncertain answers instead of pretending they are trusted?
+Run the same test or scenario again using a fresh output filename. A prompt change can improve behavior but is not a security boundary. Preserve a before/after example and explain one tradeoff.
 
-## Step 5 — Decide what is ready (5 minutes)
+## 5. Decide whether to release — 4 minutes
 
-Run all challenge tests with `WORKSHOP_TRACK=starter`, without a `-k` filter, and your new tests. Sixteen green challenge checks establish this small contract, not production readiness.
+Does your application meet all four criteria: valid plan, priority-aware selection, faithful draft, bounded permissions? A program exit code alone does not establish all four.
 
-Finish with one rate, one latency observation, one raw output, and one remaining risk. Choose unattended release, supervised source-viewing prototype, or no release. An evidence-backed “not ready” is a successful workshop outcome.
+Record a remaining limitation and the evidence you would require before real use. More model calls increase latency; a larger model may change quality but does not replace host validation.
 
-**Use the [90-second team demo format](../INTERNAL-WALKTHROUGH.md#8-present-it-to-the-team). Label reference code and published logs as such.**
+## Final ten-minute group share
+
+Each pair has 60 seconds: user's problem → useful output → your code change → failure/limitation → what GenieX provided. Use [the worksheet](../workshops/workday-copilot/WORKSHEET.md). Review the [actual laptop report](../verification/WORKDAY-COPILOT.md) to compare observations, not to copy expected answers.
